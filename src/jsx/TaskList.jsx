@@ -25,6 +25,13 @@ class TaskList extends React.Component {
 
 	componentDidMount() {
 		this.loadTaskList();
+
+		var event = new Event('logout');
+		document.getElementById('auth2-logout-button').addEventListener('click', function () {
+console.log('logging out');
+			this.dispatchEvent(event);
+		});
+
 	}
 
 	taskDoneHandler(evt) {
@@ -80,15 +87,51 @@ class TaskList extends React.Component {
 	}
 
 	render() {
+		// let auth2 = gapi.auth2.getAuthInstance();
+		// if (auth2.isSignedIn.get()) {
+			return (
+				<div>
+					<button id="auth2-logout-button">Log out</button>
+					<button onClick={logUser}>User data</button>
 
-		return (
-			<div>
-				<h1 className="do--title">Úkoly</h1>
-				<Link to={Config.taskDetailScreenPath} className="do--button do--margin-medium--top">Přidat úkol</Link>
-				{this.getTaskListHtml()}
-			</div>
-		);
+					<h1 className="do--title">Úkoly</h1>
+					<Link to={Config.taskDetailScreenPath} className="do--button do--margin-medium--top">Přidat úkol</Link>
+					{this.getTaskListHtml()}
+				</div>
+			);
+		// } else {
+		// 	auth2.signIn();
+		// 	return ;
+		// }
 	}
 };
+
+// function onSignIn(googleUser) {
+//   var profile = googleUser.getBasicProfile();
+//   console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+//   console.log('Name: ' + profile.getName());
+//   console.log('Image URL: ' + profile.getImageUrl());
+//   console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+// }
+
+// function signOut() {
+// 	var auth2 = gapi.auth2.getAuthInstance();
+// 	auth2.signOut().then(function () {
+// 	  console.log('User signed out.');
+// 	});
+// }
+
+function logUser() {
+	var auth2 = gapi.auth2.getAuthInstance();
+	if (auth2.isSignedIn.get()) {
+	  var profile = auth2.currentUser.get().getBasicProfile();
+	  console.log('ID: ' + profile.getId());
+	  console.log('Full Name: ' + profile.getName());
+	  console.log('Given Name: ' + profile.getGivenName());
+	  console.log('Family Name: ' + profile.getFamilyName());
+	  console.log('Image URL: ' + profile.getImageUrl());
+	  console.log('Email: ' + profile.getEmail());
+	}
+}
 
 export default TaskList

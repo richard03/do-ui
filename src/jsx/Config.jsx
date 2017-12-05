@@ -11,6 +11,8 @@ export default {
 
 	loadingListMessage: 'Načítám úkoly...',
 	loadingDataMessage: 'Načítám data...',
-	emptyListMessage: 'Nemáte žádné úkoly'
+	emptyListMessage: 'Nemáte žádné úkoly',
 
+	gApiKey: '752355908856-6ltij7jk35g0jn1l1fesnv6ung3rbtlo.apps.googleusercontent.com'
+	
 }
