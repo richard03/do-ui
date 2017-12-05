@@ -5,7 +5,7 @@ import Moment from 'moment'
 import Config from './Config.jsx'
 import { getQueryVariable } from './lib.jsx'
 import ui from './uiElements.jsx'
-
+import Header from './Header.jsx'
 
 
 class Task extends React.Component {
@@ -144,12 +144,15 @@ class Task extends React.Component {
 	render() {
 		if (this.state.mode == 'initializing') {
 			return (
-				<div className="do--info do--margin-medium--top">{Config.loadingDataMessage}</div>
+				<div>
+					<Header title='Úkol' />
+					<div className="do--info do--margin-medium--top">{Config.loadingDataMessage}</div>
+				</div>
 			)
 		} else {
 			return (
-				<div data-task-id={this.state.task.id}>
-					<h1 className="do--title">Úkol</h1>
+				<div>
+					<Header title='Úkol' />
 					<form method="POST" action={this.getApiUrl()} onSubmit={this.handleFormSubmit.bind(this)}>
 						<input type="hidden" name="id" value={this.state.task.id}/>
 						<input type="hidden" name="status" value={this.state.task.status}/>
@@ -199,7 +202,7 @@ class Task extends React.Component {
 								onClick={this.setMode.bind(this, 'edit')}
 								onValueChange={this.handleFieldChange.bind(this)} />
 
-						<div className="do--margin-medium--top">
+						<div className="do--margin-extra--top">
 							<ui.show if={this.state.mode == 'view'}>
 								<ui.submitButton label='Splněno' className="do--margin-medium--right" onClick={this.setStatusDone.bind(this)} />
 								<Link to={Config.taskListScreenPath} className="do--button do--margin-medium--right">Zpět</Link>

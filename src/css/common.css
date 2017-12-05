@@ -20,7 +20,7 @@ button {
 }
 textarea {
 	display: block;
-	min-height: 5em;
+	min-height: 10em;
 }
 p {
 	margin: 0;
@@ -110,6 +110,11 @@ textarea.do--data-field__control {
 
 
 
+
+
+.do--margin-wide--top {
+	margin-top: 24px !important;	
+}
 .do--margin-wide--left {
 	margin-left: 24px !important;	
 }
@@ -117,9 +122,14 @@ textarea.do--data-field__control {
 
 
 
+
+.do--margin-extra--top {
+	margin-top: 36px !important;	
+}
 .do--margin-extra--left {
 	margin-left: 36px !important;	
 }
+
 
 
 
@@ -129,6 +139,7 @@ textarea.do--data-field__control {
 .do--float--right {
 	float: right !important;
 }
+
 
 
 
@@ -144,7 +155,6 @@ textarea.do--data-field__control {
 	top: 6px;
 	bottom: 6px;
 }
-
 .do--list__item {
 	position: relative;
 	list-style: none;
