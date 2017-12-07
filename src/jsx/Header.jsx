@@ -1,15 +1,18 @@
 import React from 'react'
+import { connect } from 'react-redux'
 
-class Header extends React.Component {
-	constructor(props) {
-		super(props);
-	}
+function Header({ userName, title }) {
 
-	render() {
-		return (
-			<h1 className="do--title">{this.props.title}</h1>
-		);
-	}
+	return (
+		<div>
+			<h1 className="do--title">{title}</h1>
+			<div className="do--float--right">{userName}</div>
+		</div>
+	);
 };
 
-export default Header
+export default connect(
+	state => ({ userName: state.userName }),
+	{ title }
+)(Header)
+// export default Header

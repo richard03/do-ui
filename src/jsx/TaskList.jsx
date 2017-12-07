@@ -7,8 +7,8 @@ import Header from './Header.jsx'
 
 class TaskList extends React.Component {
 
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 
 		this.state = {
 			tasks: [],
@@ -88,7 +88,7 @@ class TaskList extends React.Component {
 	render() {
 		return (
 			<div>
-				<Header title='Úkoly' />
+				<Header title='Úkoly' userName="TODO" />
 				<Link to={Config.taskDetailScreenPath} className="do--button do--margin-medium--top">Přidat úkol</Link>
 				{this.getTaskListHtml()}
 			</div>

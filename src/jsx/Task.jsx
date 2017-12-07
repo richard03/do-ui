@@ -9,8 +9,8 @@ import Header from './Header.jsx'
 
 
 class Task extends React.Component {
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 
 		const maxId = 9999999999999999; // may not be bigger than maxBigInt and maxLong (for compatibility with other systems we integrate)
 
@@ -145,7 +145,7 @@ class Task extends React.Component {
 		if (this.state.mode == 'initializing') {
 			return (
 				<div>
-					<Header title='Úkol' />
+					<Header title='Úkol' store={this.props.store} />
 					<div className="do--info do--margin-medium--top">{Config.loadingDataMessage}</div>
 				</div>
 			)
