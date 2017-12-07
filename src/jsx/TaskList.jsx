@@ -7,8 +7,8 @@ import Header from './Header.jsx'
 
 class TaskList extends React.Component {
 
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 
 		this.state = {
 			tasks: [],
