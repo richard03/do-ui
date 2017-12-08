@@ -7,6 +7,8 @@ import { getQueryVariable } from './lib.jsx'
 import ui from './uiElements.jsx'
 import Header from './Header.jsx'
 
+import { connect } from 'react-redux'
+
 
 class Task extends React.Component {
 	constructor(props) {
@@ -77,6 +79,7 @@ class Task extends React.Component {
 	}
 
 	submitToApi() {
+
  		let postBody = new FormData();
  		// task mapping
 		postBody.set('id', this.state.task.id);
@@ -85,6 +88,7 @@ class Task extends React.Component {
 		postBody.set('due_date', this.state.task.dueDate);
 		postBody.set('status', this.state.task.status);
 		postBody.set('priority', this.state.task.priority);
+		postBody.set('owner', this.props.login);
 
 		const taskComponent = this;
 		return new Promise((resolve) => {
@@ -225,4 +229,25 @@ class Task extends React.Component {
 	}
 };
 
-export default Task
+// export default Task
+
+
+const mapStateToProps = (state) => {
+	return {
+		login: state.login,
+		// hasErrored: state.itemsHasErrored,
+		// isLoading: state.itemsIsLoading
+    };
+};
+const mapDispatchToProps = (dispatch) => {
+	return {
+		// type: 'submitTask',
+		// id: this.state.task.id,
+		// title: this.state.task.title,
+		// acceptanceCriteria: this.state.task.acceptanceCriteria,
+		// dueDate: this.state.task.dueDate,
+		// status: this.state.task.status,
+		// priority: this.state.task.priority
+	}
+}
+export default connect(mapStateToProps, mapDispatchToProps)(Task);

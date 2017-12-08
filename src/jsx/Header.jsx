@@ -1,12 +1,12 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-function Header({ title, name }) {
+function Header({ title, login }) {
 
 	return (
 		<div>
 			<h1 className="do--title">{title}</h1>
-			<div className="do--float--right">{name}</div>
+			<div className="do--float--right">{login}</div>
 		</div>
 	);
 };
@@ -22,7 +22,7 @@ function Header({ title, name }) {
 
 const mapStateToProps = (state) => {
     return {
-        name: state.name,
+        login: state.login,
         // hasErrored: state.itemsHasErrored,
         // isLoading: state.itemsIsLoading
     };

@@ -1,6 +1,5 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import { connect } from 'react-redux'
 
 import Config from './Config.jsx'
 import { addClassName } from './lib.jsx'
@@ -98,18 +97,4 @@ class TaskList extends React.Component {
 };
 
 
-// export default TaskList
-
-const mapStateToProps = (state) => {
-    return {
-        name: state.name,
-        // hasErrored: state.itemsHasErrored,
-        // isLoading: state.itemsIsLoading
-    };
-};
-const mapDispatchToProps = (dispatch) => {
-    return {
-//        fetchData: (url) => dispatch(itemsFetchData(url))
-    };
-};
-export default connect(mapStateToProps, mapDispatchToProps)(TaskList);
+export default TaskList
