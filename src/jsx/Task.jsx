@@ -243,20 +243,11 @@ class Task extends React.Component {
 
 const mapStateToProps = (state) => {
 	return {
-		login: state.login
-		// hasErrored: state.itemsHasErrored,
-		// isLoading: state.itemsIsLoading
+		login: state.loginReducer.login
 	};
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
-		// type: 'submitTask',
-		// id: this.state.task.id,
-		// title: this.state.task.title,
-		// acceptanceCriteria: this.state.task.acceptanceCriteria,
-		// dueDate: this.state.task.dueDate,
-		// status: this.state.task.status,
-		// priority: this.state.task.priority
 	}
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Task);

@@ -8,8 +8,8 @@ import Header from './Header.jsx'
 
 class TaskList extends React.Component {
 
-	constructor() {
-		super();
+	constructor(props) {
+		super(props);
 
 		this.state = {
 			tasks: [],
@@ -18,14 +18,9 @@ class TaskList extends React.Component {
 
 	}
 
-	loadTaskList() {
-		fetch(Config.apiBaseUrl + Config.apiTaskListPath)
-			.then(result=>result.json())
-			.then(tasks=>this.setState({tasks: tasks, listLoaded: true}));
-	}
-
 	componentDidMount() {
-		this.loadTaskList();
+		// this.loadTaskList();
+		this.props.loadTaskList();
 
 		// var event = new Event('logout');
 		// document.getElementById('auth2-logout-button').addEventListener('click', function () {
@@ -64,37 +59,40 @@ class TaskList extends React.Component {
 			return buffer.join(" ");
 		}
 
-		var taskListHtml;
-		if (!this.state.listLoaded) {
-			taskListHtml = <div className="do--info do--margin-medium--top">{Config.loadingListMessage}</div>
-			
-		} else {
-			var taskListItemsHtml;
-			taskListHtml = <div className="do--info do--margin-medium--top">{Config.emptyListMessage}</div>
-			if (this.state.tasks.length > 0) {
-				taskListItemsHtml = this.state.tasks.map((taskData)=>
-					(taskData.status === 'open')? 
-						<li className={getTaskListItemClass(taskData)} key={taskData.id}>
-							<Link to={Config.taskDetailScreenPath + '?taskid=' + taskData.id} className="do--list__item__link do--margin-wide--left">{taskData.title}</Link>
-							<button className="do--list__button-left" data-task-id={taskData.id} onClick={this.taskDoneHandler.bind(this)}> </button>
-						</li>
-					: ''
-				);
-				taskListHtml = <ul className="do--list do--margin-medium--top">{taskListItemsHtml}</ul>
-			}
+		var taskListHtml, taskListItemsHtml;
+		taskListHtml = <div className="do--info do--margin-medium--top">{Config.emptyListMessage}</div>
+		if (this.props.tasks.length > 0) {
+			taskListItemsHtml = this.props.tasks.map((taskData)=>
+				(taskData.status === 'open')? 
+					<li className={getTaskListItemClass(taskData)} key={taskData.id}>
+						<Link to={Config.taskDetailScreenPath + '?taskid=' + taskData.id} className="do--list__item__link do--margin-wide--left">{taskData.title}</Link>
+						<button className="do--list__button-left" data-task-id={taskData.id} onClick={this.taskDoneHandler.bind(this)}> </button>
+					</li>
+				: ''
+			);
+			taskListHtml = <ul className="do--list do--margin-medium--top">{taskListItemsHtml}</ul>
 		}
 		return taskListHtml
 	}
 
 	render() {
 		if (this.props.login) {
-			return (
-				<div>
-					<Header title='Úkoly' />
-					<Link to={Config.taskDetailScreenPath} className="do--button do--margin-medium--top">Přidat úkol</Link>
-					{this.getTaskListHtml()}
-				</div>
-			)			
+			if (this.props.loading) {
+				return (
+					<div>
+						<Header title='Úkoly' />
+						<div>{Config.loadingListMessage}</div>
+					</div>
+				)
+			} else { // taskList already loaded
+				return (
+					<div>
+						<Header title='Úkoly' />
+						<Link to={Config.taskDetailScreenPath} className="do--button do--margin-medium--top">Přidat úkol</Link>
+						{this.getTaskListHtml()}
+					</div>
+				)
+			}
 		} else { // not logged in
 			return (
 				<Header title='Úkoly' />
@@ -106,11 +104,14 @@ class TaskList extends React.Component {
 
 const mapStateToProps = (state) => {
 	return {
-		login: state.login
+		login: state.loginReducer.login,
+		loading: state.taskReducer.taskListLoading,
+		tasks: state.taskReducer.tasks
     };
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
+		loadTaskList: () => dispatch({ type: "loadTaskList" })
 	}
 }
 export default connect(mapStateToProps, mapDispatchToProps)(TaskList);

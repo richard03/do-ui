@@ -24,18 +24,45 @@ import Task from './Task.jsx'
 
 
 const initialState = {
-	login: ''
+	loginReducer: {
+		login: ''
+	},
+	taskReducer: {
+		taskListLoading: false,
+		tasks: []
+	}
 }
 
 function loginReducer(state = initialState, action) {
 	switch(action.type) {
-		case 'login': return { login: action.login}
+		case 'login': return { login: action.login }
 		default: return state
 	}
 }
 
+// const store = createStore(loginReducer)
+const store = createStore(combineReducers({
+	 	loginReducer,
+		taskReducer
+	}),
+	initialState
+)
+
 function taskReducer(state = initialState, action) {
 	switch(action.type) {
+		case 'loadTaskList':
+			// send request to server to start loading tasks
+			fetch(Config.apiBaseUrl + Config.apiTaskListPath)
+				.then(result=>result.json())
+				.then(function (tasks) {
+					store.dispatch({ type: 'populateTaskList', tasks: tasks })
+				})
+			return { taskListLoading: true }
+
+		case 'populateTaskList':
+			// populate task list after server returned the list of tasks
+			return { tasks: action.tasks, taskListLoading: false }
+
 		// case 'submitTask': 
 
 	 // 		let postBody = new FormData();
@@ -61,15 +88,9 @@ function taskReducer(state = initialState, action) {
 	}	
 }
 
-const store = createStore(loginReducer)
 
-// const store = createStore(function (state = initialState, action) {
-// 	combineReducers({
-// 		login: loginReducer,
-// 		task: taskReducer
-// 	})
-// 	return state
-// })
+
+
 
 
 // Create an enhanced history that syncs navigation events with the store

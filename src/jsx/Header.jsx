@@ -39,7 +39,7 @@ function Header({ title, login, handleLogin }) {
 
 const mapStateToProps = (state) => {
 	return {
-		login: state.login
+		login: state.loginReducer.login
 		// hasErrored: state.itemsHasErrored,
 		// isLoading: state.itemsIsLoading
 	};
