@@ -75,7 +75,7 @@ const store = createStore(loginReducer)
 // Create an enhanced history that syncs navigation events with the store
 // const history = syncHistoryWithStore(browserHistory, store)
 
-store.dispatch({ type: 'login', login: 'richard.sery.3@gmail.com' });
+
 
 // console.log(store);
 

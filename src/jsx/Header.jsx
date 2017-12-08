@@ -1,15 +1,32 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-function Header({ title, login }) {
+function Header({ title, login, handleLogin }) {
 
-	return (
-		<div>
-			<h1 className="do--title">{title}</h1>
-			<div className="do--float--right">{login}</div>
-		</div>
-	);
+	if (login) {
+		return (
+			<div>
+				<h1 className="do--title">{title}</h1>
+				<div className="do--float--right">{login}</div>
+			</div>
+		);
+	} else { // not logged in
+		return (
+			<div>
+				<h1 className="do--title">{title}</h1>
+				<div className="do--float--right">
+					<button className="do-button" onClick={handleLogin}>Přihlášení</button>
+				</div>
+			</div>
+		);
+	}
+
 };
+
+
+// function handleLogin() {
+// 	store.dispatch({ type: 'login', login: 'richard.sery.3@gmail.com' });
+// }
 
 // export default connect(
 // 	state => ({ userName: state.userName }),
@@ -22,13 +39,16 @@ function Header({ title, login }) {
 
 const mapStateToProps = (state) => {
     return {
-        login: state.login,
+        login: state.login
         // hasErrored: state.itemsHasErrored,
         // isLoading: state.itemsIsLoading
     };
 };
 const mapDispatchToProps = (dispatch) => {
     return {
+    		handleLogin: function () {
+    			return dispatch({ type: 'login', login: 'richard.sery.3@gmail.com' })
+    		}
 //        fetchData: (url) => dispatch(itemsFetchData(url))
     };
 };
