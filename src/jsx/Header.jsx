@@ -5,16 +5,16 @@ function Header({ title, login, handleLogin }) {
 
 	if (login) {
 		return (
-			<div>
-				<h1 className="do--title">{title}</h1>
-				<div className="do--float--right">{login}</div>
+			<div className="do--float">
+				<h1 className="do--title do--float__left">{title}</h1>
+				<div className="do--float__right">{login}</div>
 			</div>
 		);
 	} else { // not logged in
 		return (
-			<div>
-				<h1 className="do--title">{title}</h1>
-				<div className="do--float--right">
+			<div className="do--float">
+				<h1 className="do--title do--float__left">{title}</h1>
+				<div className="do--float__right">
 					<button className="do-button" onClick={handleLogin}>Přihlášení</button>
 				</div>
 			</div>
@@ -38,11 +38,11 @@ function Header({ title, login, handleLogin }) {
 // export default Header
 
 const mapStateToProps = (state) => {
-    return {
-        login: state.login
-        // hasErrored: state.itemsHasErrored,
-        // isLoading: state.itemsIsLoading
-    };
+	return {
+		login: state.login
+		// hasErrored: state.itemsHasErrored,
+		// isLoading: state.itemsIsLoading
+	};
 };
 const mapDispatchToProps = (dispatch) => {
     return {

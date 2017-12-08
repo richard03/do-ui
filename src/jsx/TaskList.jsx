@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
 
 import Config from './Config.jsx'
 import { addClassName } from './lib.jsx'
@@ -86,15 +87,30 @@ class TaskList extends React.Component {
 	}
 
 	render() {
-		return (
-			<div>
+		if (this.props.login) {
+			return (
+				<div>
+					<Header title='Úkoly' />
+					<Link to={Config.taskDetailScreenPath} className="do--button do--margin-medium--top">Přidat úkol</Link>
+					{this.getTaskListHtml()}
+				</div>
+			)			
+		} else { // not logged in
+			return (
 				<Header title='Úkoly' />
-				<Link to={Config.taskDetailScreenPath} className="do--button do--margin-medium--top">Přidat úkol</Link>
-				{this.getTaskListHtml()}
-			</div>
-		);
+			)
+		}
 	}
 };
 
 
-export default TaskList
+const mapStateToProps = (state) => {
+	return {
+		login: state.login
+    };
+};
+const mapDispatchToProps = (dispatch) => {
+	return {
+	}
+}
+export default connect(mapStateToProps, mapDispatchToProps)(TaskList);

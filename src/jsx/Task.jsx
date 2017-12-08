@@ -145,6 +145,76 @@ class Task extends React.Component {
 		});
 	}
 
+	renderTaskForm() {
+		return (
+			<form method="POST" action={this.getApiUrl()} onSubmit={this.handleFormSubmit.bind(this)}>
+				<input type="hidden" name="id" value={this.state.task.id}/>
+				<input type="hidden" name="status" value={this.state.task.status}/>
+
+				<ui.textField 
+						mode={this.state.mode}
+						label='Název' 
+						name='title' 
+						value={this.state.task.title}
+						onClick={this.setMode.bind(this, 'edit')}
+						onValueChange={this.handleFieldChange.bind(this)}
+						className='do--margin-medium--top' />
+
+				<ui.selectField 
+						mode={this.state.mode}
+						label='Priorita'
+						name='priority' 
+						value={this.state.task.priority}
+						onClick={this.setMode.bind(this, 'edit')}
+						onValueChange={this.handleFieldChange.bind(this)}
+						className='do--margin-medium--top'
+						options={[
+							{value: 3, label: "Kritická"},
+							{value: 2, label: "Vysoká"},
+							{value: 1, label: "Normální"},
+							{value: 0, label: "Nízká"}
+						]}>
+					<option value="3">Kritická</option>
+					<option value="2">Vysoká</option>
+					<option value="1">Normální</option>
+					<option value="0">Nízká</option>
+				</ui.selectField>
+
+				<ui.dateField 
+						mode={this.state.mode}
+						label='Termín' 
+						value={this.state.task.dueDate}
+						dateFormat={Config.taskDateFormat}
+						onClick={this.setMode.bind(this, 'edit')}
+						onValueChange={this.handleDeadlineChange.bind(this)} />
+
+				<ui.textAreaField 
+						mode={this.state.mode}
+						label='Akceptační kriteria' 
+						name='acceptanceCriteria' 
+						value={this.state.task.acceptanceCriteria}
+						onClick={this.setMode.bind(this, 'edit')}
+						onValueChange={this.handleFieldChange.bind(this)} />
+
+				<div className="do--margin-extra--top do--float">
+					<ui.show if={this.state.mode == 'view'}>
+						<ui.submitButton label='Splněno' className="do--margin-medium--right" onClick={this.setStatusDone.bind(this)} />
+						<Link to={Config.taskListScreenPath} className="do--button do--margin-medium--right">Zpět</Link>
+						<ui.button label='Smazat' className="do--float__right" onClick={this.deleteTask.bind(this)} />
+					</ui.show>
+					<ui.show if={this.state.mode == 'edit'}>
+						<ui.submitButton label='Uložit změny' className="do--margin-medium--right" />
+						<ui.button label='Zpět' className="do--margin-medium--right" onClick={this.setMode.bind(this, 'view')} />			
+					</ui.show>
+					<ui.show if={this.state.mode == 'create'}>
+						<ui.submitButton label='Vytvořit úkol' className="do--margin-medium--right" />
+						<Link to={Config.taskListScreenPath} className="do--button do--margin-medium--right">Zpět</Link>		
+					</ui.show>
+				</div>
+			</form>
+		);
+	}
+
 	render() {
 		if (this.state.mode == 'initializing') {
 			return (
@@ -153,78 +223,17 @@ class Task extends React.Component {
 					<div className="do--info do--margin-medium--top">{Config.loadingDataMessage}</div>
 				</div>
 			)
-		} else {
+		} else if (this.props.login) { // logged in, show the form
 			return (
 				<div>
 					<Header title='Úkol' />
-					<form method="POST" action={this.getApiUrl()} onSubmit={this.handleFormSubmit.bind(this)}>
-						<input type="hidden" name="id" value={this.state.task.id}/>
-						<input type="hidden" name="status" value={this.state.task.status}/>
-
-						<ui.textField 
-								mode={this.state.mode}
-								label='Název' 
-								name='title' 
-								value={this.state.task.title}
-								onClick={this.setMode.bind(this, 'edit')}
-								onValueChange={this.handleFieldChange.bind(this)}
-								className='do--margin-medium--top' />
-
-						<ui.selectField 
-								mode={this.state.mode}
-								label='Priorita'
-								name='priority' 
-								value={this.state.task.priority}
-								onClick={this.setMode.bind(this, 'edit')}
-								onValueChange={this.handleFieldChange.bind(this)}
-								className='do--margin-medium--top'
-								options={[
-									{value: 3, label: "Kritická"},
-									{value: 2, label: "Vysoká"},
-									{value: 1, label: "Normální"},
-									{value: 0, label: "Nízká"}
-								]}>
-							<option value="3">Kritická</option>
-							<option value="2">Vysoká</option>
-							<option value="1">Normální</option>
-							<option value="0">Nízká</option>
-						</ui.selectField>
-
-						<ui.dateField 
-								mode={this.state.mode}
-								label='Termín' 
-								value={this.state.task.dueDate}
-								dateFormat={Config.taskDateFormat}
-								onClick={this.setMode.bind(this, 'edit')}
-								onValueChange={this.handleDeadlineChange.bind(this)} />
-
-						<ui.textAreaField 
-								mode={this.state.mode}
-								label='Akceptační kriteria' 
-								name='acceptanceCriteria' 
-								value={this.state.task.acceptanceCriteria}
-								onClick={this.setMode.bind(this, 'edit')}
-								onValueChange={this.handleFieldChange.bind(this)} />
-
-						<div className="do--margin-extra--top">
-							<ui.show if={this.state.mode == 'view'}>
-								<ui.submitButton label='Splněno' className="do--margin-medium--right" onClick={this.setStatusDone.bind(this)} />
-								<Link to={Config.taskListScreenPath} className="do--button do--margin-medium--right">Zpět</Link>
-								<ui.button label='Smazat' className="do--float--right" onClick={this.deleteTask.bind(this)} />
-							</ui.show>
-							<ui.show if={this.state.mode == 'edit'}>
-								<ui.submitButton label='Uložit změny' className="do--margin-medium--right" />
-								<ui.button label='Zpět' className="do--margin-medium--right" onClick={this.setMode.bind(this, 'view')} />			
-							</ui.show>
-							<ui.show if={this.state.mode == 'create'}>
-								<ui.submitButton label='Vytvořit úkol' className="do--margin-medium--right" />
-								<Link to={Config.taskListScreenPath} className="do--button do--margin-medium--right">Zpět</Link>		
-							</ui.show>
-						</div>
-
-					</form>
+					{this.renderTaskForm()}
 				</div>
-			);
+			)
+		} else { // wait for login
+			return (
+				<Header title='Úkol' />
+			)
 		}
 	}
 };
@@ -234,10 +243,10 @@ class Task extends React.Component {
 
 const mapStateToProps = (state) => {
 	return {
-		login: state.login,
+		login: state.login
 		// hasErrored: state.itemsHasErrored,
 		// isLoading: state.itemsIsLoading
-    };
+	};
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
