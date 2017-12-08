@@ -63,6 +63,17 @@ function taskReducer(state = initialState, action) {
 			// populate task list after server returned the list of tasks
 			return { tasks: action.tasks, taskListLoading: false }
 
+		case 'resolveTask':
+			let postBody = new FormData();
+			postBody.set('id', action.taskId);
+			postBody.set('status', "done");
+			fetch(Config.apiBaseUrl + Config.apiTaskListPath + '/' + action.taskId + '/', { 
+				method: 'POST',
+				body: postBody
+			}).then(function (tasks) {
+				store.dispatch({ type: 'loadTaskList' })
+			});
+
 		// case 'submitTask': 
 
 	 // 		let postBody = new FormData();

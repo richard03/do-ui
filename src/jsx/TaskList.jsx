@@ -9,43 +9,35 @@ import Header from './Header.jsx'
 class TaskList extends React.Component {
 
 	constructor(props) {
-		super(props);
-
-		this.state = {
-			tasks: [],
-			listLoaded: null
-		};
-
+		super(props)
 	}
 
 	componentDidMount() {
-		// this.loadTaskList();
-		this.props.loadTaskList();
-
-		// var event = new Event('logout');
-		// document.getElementById('auth2-logout-button').addEventListener('click', function () {
-		// 	this.dispatchEvent(event);
-		// });
-
+		this.props.loadTaskList()
 	}
 
-	taskDoneHandler(evt) {
-		const taskId = evt.target.getAttribute('data-task-id');
-		let taskListComponent = this;
-		addClassName(evt.target.parentNode, 'do--list__item--removed');
+	// taskDoneHandler(evt) {
+	// 	const taskId = evt.target.getAttribute('data-task-id');
+	// 	let taskListComponent = this;
+	// 	addClassName(evt.target.parentNode, 'do--list__item--removed');
 
-		let postBody = new FormData();
-		postBody.set('id', taskId);
-		postBody.set('status', "done");
-		fetch(Config.apiBaseUrl + Config.apiTaskListPath + '/' + taskId + '/', { 
-			method: 'POST',
-			body: postBody
-		}).then(taskListComponent.loadTaskList());
+	// 	let postBody = new FormData();
+	// 	postBody.set('id', taskId);
+	// 	postBody.set('status', "done");
+	// 	fetch(Config.apiBaseUrl + Config.apiTaskListPath + '/' + taskId + '/', { 
+	// 		method: 'POST',
+	// 		body: postBody
+	// 	}).then(taskListComponent.loadTaskList());
+	// }
+
+	resolveTaskHandler(evt) {
+		let listItemElm = evt.target.parentNode
+		addClassName(listItemElm, 'do--list__item--removed')
+		let taskId = listItemElm.dataset.taskId
+		this.props.resolveTask(taskId)
 	}
-
 
 	getTaskListHtml() {
-
 		function getTaskListItemClass(taskData) {
 			let buffer = [];
 			buffer.push("do--list__item");
@@ -64,9 +56,9 @@ class TaskList extends React.Component {
 		if (this.props.tasks.length > 0) {
 			taskListItemsHtml = this.props.tasks.map((taskData)=>
 				(taskData.status === 'open')? 
-					<li className={getTaskListItemClass(taskData)} key={taskData.id}>
+					<li className={getTaskListItemClass(taskData)} key={taskData.id} data-task-id={taskData.id}>
 						<Link to={Config.taskDetailScreenPath + '?taskid=' + taskData.id} className="do--list__item__link do--margin-wide--left">{taskData.title}</Link>
-						<button className="do--list__button-left" data-task-id={taskData.id} onClick={this.taskDoneHandler.bind(this)}> </button>
+						<button className="do--list__button-left" onClick={this.resolveTaskHandler.bind(this)}> </button>
 					</li>
 				: ''
 			);
@@ -111,7 +103,8 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
-		loadTaskList: () => dispatch({ type: "loadTaskList" })
+		loadTaskList: () => dispatch({ type: "loadTaskList" }),
+		resolveTask: (taskId) => dispatch({ type: "resolveTask", taskId })
 	}
 }
 export default connect(mapStateToProps, mapDispatchToProps)(TaskList);
