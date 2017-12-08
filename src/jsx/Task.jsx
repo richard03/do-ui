@@ -145,7 +145,7 @@ class Task extends React.Component {
 		if (this.state.mode == 'initializing') {
 			return (
 				<div>
-					<Header title='Úkol' store={this.props.store} />
+					<Header title='Úkol' />
 					<div className="do--info do--margin-medium--top">{Config.loadingDataMessage}</div>
 				</div>
 			)

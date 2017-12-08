@@ -1,48 +1,74 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { createStore, combineReducers } from 'redux'
+import { createStore } from 'redux'
+// import { createStore, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
+// import {
+// 	HashRouter as Router,
+// 	Route,
+// 	Switch,
+// 	browserHistory
+// } from 'react-router-dom'
 import {
 	HashRouter as Router,
 	Route,
-	Switch,
-	browserHistory
+	Switch
 } from 'react-router-dom'
-import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
+// import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 
 
 import Config from './Config.jsx'
 import TaskList from './TaskList.jsx'
 import Task from './Task.jsx'
+// import Header from './Header.jsx'
 
 
-function loginReducer(state = {}, action) {
+const initialState = {
+	name: ''
+}
+
+function loginReducer(state = initialState, action) {
 	switch(action.type) {
-		case 'setUser': return {userName: action.userName}
+		case 'login': return { name: action.name}
 		default: return state
 	}
 }
 
-const store = createStore(
-  combineReducers({
-    login: loginReducer,
-    routing: routerReducer
-  })
-)
+const store = createStore(loginReducer)
+
+// const store = createStore(function (state = initialState, action) {
+//   combineReducers({
+//     login: loginReducer,
+//     routing: routerReducer
+//   })
+//	return state
+// })
 
 // Create an enhanced history that syncs navigation events with the store
-const history = syncHistoryWithStore(browserHistory, store)
+// const history = syncHistoryWithStore(browserHistory, store)
 
-store.dispatch({ type: 'setUser', userName: 'richard.sery.3@gmail.com' });
+store.dispatch({ type: 'login', name: 'richard.sery.3@gmail.com' });
 
-console.log(store);
+// console.log(store);
+
+// ReactDOM.render(
+// 	 <Provider store={store}>
+// 		<Router>
+// 			<Switch>
+// 				<Route exact path={Config.taskDetailScreenPath} component={Task}/>
+// 				<Route render={TaskList}/>
+// 			</Switch>
+// 		</Router>
+// 	</Provider>,
+// 	document.getElementById('app')
+// );
 
 ReactDOM.render(
-	 <Provider store={store}>
+	<Provider store={store}>
 		<Router>
 			<Switch>
 				<Route exact path={Config.taskDetailScreenPath} component={Task}/>
-				<Route render={TaskList}/>
+				<Route component={TaskList}/>
 			</Switch>
 		</Router>
 	</Provider>,
