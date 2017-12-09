@@ -16,20 +16,6 @@ class TaskList extends React.Component {
 		this.props.loadTaskList()
 	}
 
-	// taskDoneHandler(evt) {
-	// 	const taskId = evt.target.getAttribute('data-task-id');
-	// 	let taskListComponent = this;
-	// 	addClassName(evt.target.parentNode, 'do--list__item--removed');
-
-	// 	let postBody = new FormData();
-	// 	postBody.set('id', taskId);
-	// 	postBody.set('status', "done");
-	// 	fetch(Config.apiBaseUrl + Config.apiTaskListPath + '/' + taskId + '/', { 
-	// 		method: 'POST',
-	// 		body: postBody
-	// 	}).then(taskListComponent.loadTaskList());
-	// }
-
 	resolveTaskHandler(evt) {
 		let listItemElm = evt.target.parentNode
 		addClassName(listItemElm, 'do--list__item--removed')
@@ -52,7 +38,7 @@ class TaskList extends React.Component {
 		}
 
 		var taskListHtml, taskListItemsHtml;
-		taskListHtml = <div className="do--info do--margin-medium--top">{Config.emptyListMessage}</div>
+		taskListHtml = <div className="do--info do--margin-medium--top">{Config.messages.emptyTaskList}</div>
 		if (this.props.tasks.length > 0) {
 			taskListItemsHtml = this.props.tasks.map((taskData)=>
 				(taskData.status === 'open')? 
@@ -72,22 +58,22 @@ class TaskList extends React.Component {
 			if (this.props.loading) {
 				return (
 					<div>
-						<Header title='Úkoly' />
-						<div>{Config.loadingListMessage}</div>
+						<Header title={Config.messages.tasks} />
+						<div>{Config.messages.loadingTaskList}</div>
 					</div>
 				)
 			} else { // taskList already loaded
 				return (
 					<div>
-						<Header title='Úkoly' />
-						<Link to={Config.taskDetailScreenPath} className="do--button do--margin-medium--top">Přidat úkol</Link>
+						<Header title={Config.messages.tasks} />
+						<Link to={Config.taskDetailScreenPath} className="do--button do--margin-medium--top">{Config.messages.addTask}</Link>
 						{this.getTaskListHtml()}
 					</div>
 				)
 			}
 		} else { // not logged in
 			return (
-				<Header title='Úkoly' />
+				<Header title={Config.messages.tasks} />
 			)
 		}
 	}

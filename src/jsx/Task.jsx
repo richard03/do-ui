@@ -15,18 +15,23 @@ class Task extends React.Component {
 		super(props);
 
 		const maxId = 9999999999999999; // may not be bigger than maxBigInt and maxLong (for compatibility with other systems we integrate)
-
 		const newTaskId = Math.floor(Math.random() * maxId); // id for new task. If we load a task later in component lifecycle, this will be overwritten
 
 		this.state = {
-			task: {
-				id: newTaskId,
-				status: 'open',
-				title: '',
-				dueDate: Moment().format(Config.apiDateTimeFormat),
-				acceptanceCriteria: '',
-				priority: 1
-			},
+			id: newTaskId,
+			status: 'open',
+			title: '',
+			dueDate: Moment().format(Config.apiDateTimeFormat),
+			acceptanceCriteria: '',
+			priority: 1,
+			// task: {
+			// 	id: newTaskId,
+			// 	status: 'open',
+			// 	title: '',
+			// 	dueDate: Moment().format(Config.apiDateTimeFormat),
+			// 	acceptanceCriteria: '',
+			// 	priority: 1
+			// },
 			mode: 'initializing'
 		};
 	}
@@ -53,7 +58,7 @@ class Task extends React.Component {
 		if (taskId) {
 			return Config.apiBaseUrl + Config.apiTaskListPath + '/' + taskId + '/'
 		} else {
-			return Config.apiBaseUrl + Config.apiTaskListPath + '/' + this.state.task.id + '/'
+			return Config.apiBaseUrl + Config.apiTaskListPath + '/' + this.state.id + '/'
 		}
 	}
 
@@ -72,7 +77,7 @@ class Task extends React.Component {
 					task.status = taskData['status'];
 					task.priority = taskData['priority'];
 					// end task mapping
-					taskComponent.setState({ task: task });
+					taskComponent.setState(task);
 					resolve();
 				});
 		});
@@ -135,27 +140,33 @@ class Task extends React.Component {
 			}
 		});
 	}
-	deleteTask(evt) {
-		evt.preventDefault();
-		const taskComponent = this;
-		fetch(this.getApiUrl(), {
-			method: 'DELETE'
-		}).then(function () {
-			taskComponent.props.history.push(Config.taskListScreenPath);
-		});
+
+	handleDeleteTask() {
+		this.props.deleteTask(this.state.id)
+		this.props.history.push(Config.taskListScreenPath);
+
 	}
+	// deleteTask(evt) {
+	// 	evt.preventDefault();
+	// 	const taskComponent = this;
+	// 	fetch(this.getApiUrl(), {
+	// 		method: 'DELETE'
+	// 	}).then(function () {
+	// 		taskComponent.props.history.push(Config.taskListScreenPath);
+	// 	});
+	// }
 
 	renderTaskForm() {
 		return (
 			<form method="POST" action={this.getApiUrl()} onSubmit={this.handleFormSubmit.bind(this)}>
-				<input type="hidden" name="id" value={this.state.task.id}/>
-				<input type="hidden" name="status" value={this.state.task.status}/>
-
+				<input type="hidden" name="id" value={this.state.id}/>
+				<input type="hidden" name="status" value={this.state.status}/>
+{"taskId: " + this.state.id}
 				<ui.textField 
 						mode={this.state.mode}
 						label='Název' 
 						name='title' 
-						value={this.state.task.title}
+						value={this.state.title}
 						onClick={this.setMode.bind(this, 'edit')}
 						onValueChange={this.handleFieldChange.bind(this)}
 						className='do--margin-medium--top' />
@@ -164,26 +175,26 @@ class Task extends React.Component {
 						mode={this.state.mode}
 						label='Priorita'
 						name='priority' 
-						value={this.state.task.priority}
+						value={this.state.priority}
 						onClick={this.setMode.bind(this, 'edit')}
 						onValueChange={this.handleFieldChange.bind(this)}
 						className='do--margin-medium--top'
 						options={[
-							{value: 3, label: "Kritická"},
-							{value: 2, label: "Vysoká"},
-							{value: 1, label: "Normální"},
-							{value: 0, label: "Nízká"}
+							{value: 3, label: Config.messages.priority.critical},
+							{value: 2, label: Config.messages.priority.high},
+							{value: 1, label: Config.messages.priority.normal},
+							{value: 0, label: Config.messages.priority.low}
 						]}>
-					<option value="3">Kritická</option>
-					<option value="2">Vysoká</option>
-					<option value="1">Normální</option>
-					<option value="0">Nízká</option>
+					<option value="3">{Config.messages.priority.critical}</option>
+					<option value="2">{Config.messages.priority.high}</option>
+					<option value="1">{Config.messages.priority.normal}</option>
+					<option value="0">{Config.messages.priority.low}</option>
 				</ui.selectField>
 
 				<ui.dateField 
 						mode={this.state.mode}
 						label='Termín' 
-						value={this.state.task.dueDate}
+						value={this.state.dueDate}
 						dateFormat={Config.taskDateFormat}
 						onClick={this.setMode.bind(this, 'edit')}
 						onValueChange={this.handleDeadlineChange.bind(this)} />
@@ -192,23 +203,23 @@ class Task extends React.Component {
 						mode={this.state.mode}
 						label='Akceptační kriteria' 
 						name='acceptanceCriteria' 
-						value={this.state.task.acceptanceCriteria}
+						value={this.state.acceptanceCriteria}
 						onClick={this.setMode.bind(this, 'edit')}
 						onValueChange={this.handleFieldChange.bind(this)} />
 
 				<div className="do--margin-extra--top do--float">
 					<ui.show if={this.state.mode == 'view'}>
-						<ui.submitButton label='Splněno' className="do--margin-medium--right" onClick={this.setStatusDone.bind(this)} />
-						<Link to={Config.taskListScreenPath} className="do--button do--margin-medium--right">Zpět</Link>
-						<ui.button label='Smazat' className="do--float__right" onClick={this.deleteTask.bind(this)} />
+						<ui.submitButton label={Config.messages.resolved} className="do--margin-medium--right" onClick={this.setStatusDone.bind(this)} />
+						<Link to={Config.taskListScreenPath} className="do--button do--margin-medium--right">{Config.messages.back}</Link>
+						<ui.button label={Config.messages.delete} className="do--float__right" onClick={this.handleDeleteTask.bind(this)} />
 					</ui.show>
 					<ui.show if={this.state.mode == 'edit'}>
-						<ui.submitButton label='Uložit změny' className="do--margin-medium--right" />
-						<ui.button label='Zpět' className="do--margin-medium--right" onClick={this.setMode.bind(this, 'view')} />			
+						<ui.submitButton label={Config.messages.saveChanges} className="do--margin-medium--right" />
+						<ui.button label={Config.messages.back} className="do--margin-medium--right" onClick={this.setMode.bind(this, 'view')} />			
 					</ui.show>
 					<ui.show if={this.state.mode == 'create'}>
-						<ui.submitButton label='Vytvořit úkol' className="do--margin-medium--right" />
-						<Link to={Config.taskListScreenPath} className="do--button do--margin-medium--right">Zpět</Link>		
+						<ui.submitButton label={Config.messages.createTask} className="do--margin-medium--right" />
+						<Link to={Config.taskListScreenPath} className="do--button do--margin-medium--right">{Config.messages.back}</Link>		
 					</ui.show>
 				</div>
 			</form>
@@ -219,20 +230,20 @@ class Task extends React.Component {
 		if (this.state.mode == 'initializing') {
 			return (
 				<div>
-					<Header title='Úkol' />
-					<div className="do--info do--margin-medium--top">{Config.loadingDataMessage}</div>
+					<Header title={Config.messages.task} />
+					<div className="do--info do--margin-medium--top">{Config.messages.loadingData}</div>
 				</div>
 			)
 		} else if (this.props.login) { // logged in, show the form
 			return (
 				<div>
-					<Header title='Úkol' />
+					<Header title={Config.messages.task} />
 					{this.renderTaskForm()}
 				</div>
 			)
 		} else { // wait for login
 			return (
-				<Header title='Úkol' />
+				<Header title={Config.messages.task} />
 			)
 		}
 	}
@@ -248,6 +259,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
+		deleteTask: (taskId) => dispatch({ type: 'deleteTask', taskId })
 	}
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Task);

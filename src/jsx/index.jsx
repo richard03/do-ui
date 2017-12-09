@@ -74,6 +74,17 @@ function taskReducer(state = initialState, action) {
 				store.dispatch({ type: 'loadTaskList' })
 			});
 
+		case 'deleteTask':
+		//	deleteTask(evt) {
+		// evt.preventDefault();
+		// const taskComponent = this;
+			fetch(Config.apiBaseUrl + Config.apiTaskListPath + '/' + action.taskId + '/', {
+					method: 'DELETE'
+				}).then(function (result) {
+					store.dispatch({ type: 'loadTaskList' })
+				});
+			return { taskListLoading: true }
+
 		// case 'submitTask': 
 
 	 // 		let postBody = new FormData();
