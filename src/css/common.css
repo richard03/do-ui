@@ -133,10 +133,15 @@ textarea.do--data-field__control {
 
 
 
-.do--float--left {
+.do--float:after {
+  content: "" !important;
+  display: table !important;
+  clear: both !important;
+}
+.do--float__left {
 	float: left !important;
 }
-.do--float--right {
+.do--float__right {
 	float: right !important;
 }
 
@@ -162,6 +167,9 @@ textarea.do--data-field__control {
 	padding: 12px 12px 12px 0;
 	border-left: 12px solid #eee;
 	box-shadow: 1px 1px 5px #ccc;
+}
+.do--list__item--removed {
+	display: none;
 }
 .do--list__item--no-padding {
 	padding: 0;

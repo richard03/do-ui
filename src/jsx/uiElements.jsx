@@ -61,12 +61,12 @@ function textField(props) {
 			return (
 				<div className={className}>
 					<label className="do--data-field__label">{props.label}</label>
-					<input type="text" name={props.name} value={props.value} onChange={props.onValueChange} className="do--data-field__control do--data-field__control--wide"/>
+					<input type="text" name={props.name} value={props.value} onChange={props.handleValueChange} className="do--data-field__control do--data-field__control--wide"/>
 				</div>
 			)
 		default: // view mode
 			return (
-				<div className={className} onClick={props.onClick}>
+				<div className={className}>
 					{props.value}
 					<input type="hidden" name={props.name} value={props.value}/>
 				</div>
@@ -85,15 +85,15 @@ function dateField(props) {
 					<label className="do--data-field__label">{props.label}</label>
 					<DatePicker
 						selected={Moment(props.value)}
-						onChange={props.onValueChange}
-						dateFormat={props.dateFormat}
+						onChange={props.handleValueChange}
+						dateFormat={props.dateformat}
 						className="do--data-field__control"
 					/>
 				</div>
 			)
 		default: // in view mode
 			return (
-				<div className={className} onClick={props.onClick}>
+				<div className={className}>
 					<h3 className="do--data-field__label">{props.label}</h3>
 					{Moment(props.value).format(props.dateFormat)}
 				</div>
@@ -101,23 +101,23 @@ function dateField(props) {
 	}
 }
 
-function selectTag(props) {
-	let buffer = [];
-	buffer.push('<option value=""></option>');
-	props.options.forEach(function (option) {
-		buffer.push('<option value="');
-		buffer.push(option.value);
-		buffer.push('">');
-		buffer.push(option.label);
-		buffer.push('</option>');
-	});
-	let optionsHtml = buffer.join('');
-	return(
-		<select name={props.name} value={props.value} onChange={props.onValueChange} className="do--data-field__control">
-			{optionsHtml}
-		</select>
-	);
-}
+// function selectTag(props) {
+// 	let buffer = [];
+// 	buffer.push('<option value=""></option>');
+// 	props.options.forEach(function (option) {
+// 		buffer.push('<option value="');
+// 		buffer.push(option.value);
+// 		buffer.push('">');
+// 		buffer.push(option.label);
+// 		buffer.push('</option>');
+// 	});
+// 	let optionsHtml = buffer.join('');
+// 	return(
+// 		<select name={props.name} value={props.value} onChange={props.handleValueChange} className="do--data-field__control">
+// 			{optionsHtml}
+// 		</select>
+// 	);
+// }
 
 function selectView(props) {
 	let i = 0;
@@ -139,7 +139,7 @@ function selectField(props) {
 			return (
 				<div className={className}>
 					<label className="do--data-field__label">{props.label}</label>
-					<select name={props.name} value={props.value} onChange={props.onValueChange} className="do--data-field__control">
+					<select name={props.name} value={props.value} onChange={props.handleValueChange} className="do--data-field__control">
 						{props.options.map(function (option) {
 							return <option key={props.name + option.value} value={option.value}>{option.label}</option>;
 						})}
@@ -148,7 +148,7 @@ function selectField(props) {
 			)
 		default: // view mode
 			return (
-				<div className={className} onClick={props.onClick}>
+				<div className={className}>
 					{selectView(props)}
 					<input type="hidden" name={props.name} value={props.value}/>
 				</div>
@@ -165,12 +165,12 @@ function textAreaField(props) {
 			return (
 				<div className={className}>
 					<label className="do--data-field__label">{props.label}</label>
-					<textarea name={props.name} value={props.value} onChange={props.onValueChange} className="do--data-field__control do--data-field__control--wide"></textarea>
+					<textarea name={props.name} value={props.value} onChange={props.handleValueChange} className="do--data-field__control do--data-field__control--wide"></textarea>
 				</div>
 			)
 		default: // in view mode
 			return (
-				<div className={className} onClick={props.onClick}>
+				<div className={className}>
 					<h3 className="do--data-field__label">{props.label}</h3>
 					{props.value.split('\n').map( (item, i) =>  
 						<p key={props.name + '-line-' + i}>{item}</p>
@@ -187,7 +187,7 @@ function textAreaField(props) {
 function submitButton(props) {
 	let className = ['do--button', props.className].join(' ');
 	return (
-		<button className={className} onClick={props.onClick}>{props.label}</button>
+		<button {...props} className={className}>{props.label}</button>
 	)
 }
 
@@ -197,6 +197,6 @@ function submitButton(props) {
 function button(props) {
 	let className = ['do--button', props.className].join(' ');
 	return (
-		<button type='button' className={className} onClick={props.onClick}>{props.label}</button>
+		<button {...props} type='button' className={className}>{props.label}</button>
 	)
 }

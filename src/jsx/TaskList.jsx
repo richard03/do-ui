@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import { connect } from 'react-redux'
 
 import Config from './Config.jsx'
 import { addClassName } from './lib.jsx'
@@ -8,48 +9,24 @@ import Header from './Header.jsx'
 class TaskList extends React.Component {
 
 	constructor(props) {
-		super(props);
-
-		this.state = {
-			tasks: [],
-			listLoaded: null
-		};
-
+		super(props)
 	}
 
-	loadTaskList() {
-		fetch(Config.apiBaseUrl + Config.apiTaskListPath)
-			.then(result=>result.json())
-			.then(tasks=>this.setState({tasks: tasks, listLoaded: true}));
+	componentWillMount() {
+		this.props.updateSiteMapPosition();
+		if (this.props.login) {
+			this.props.loadTaskList()
+		}
 	}
 
-	componentDidMount() {
-		this.loadTaskList();
-
-		// var event = new Event('logout');
-		// document.getElementById('auth2-logout-button').addEventListener('click', function () {
-		// 	this.dispatchEvent(event);
-		// });
-
+	resolveTaskHandler(evt) {
+		let listItemElm = evt.target.parentNode
+		addClassName(listItemElm, 'do--list__item--removed')
+		let taskId = listItemElm.dataset.taskId
+		this.props.resolveTask(taskId)
 	}
-
-	taskDoneHandler(evt) {
-		const taskId = evt.target.getAttribute('data-task-id');
-		let taskListComponent = this;
-		addClassName(evt.target.parentNode, 'do--list__item--removed');
-
-		let postBody = new FormData();
-		postBody.set('id', taskId);
-		postBody.set('status', "done");
-		fetch(Config.apiBaseUrl + Config.apiTaskListPath + '/' + taskId + '/', { 
-			method: 'POST',
-			body: postBody
-		}).then(taskListComponent.loadTaskList());
-	}
-
 
 	getTaskListHtml() {
-
 		function getTaskListItemClass(taskData) {
 			let buffer = [];
 			buffer.push("do--list__item");
@@ -63,38 +40,61 @@ class TaskList extends React.Component {
 			return buffer.join(" ");
 		}
 
-		var taskListHtml;
-		if (!this.state.listLoaded) {
-			taskListHtml = <div className="do--info do--margin-medium--top">{Config.loadingListMessage}</div>
-			
-		} else {
-			var taskListItemsHtml;
-			taskListHtml = <div className="do--info do--margin-medium--top">{Config.emptyListMessage}</div>
-			if (this.state.tasks.length > 0) {
-				taskListItemsHtml = this.state.tasks.map((taskData)=>
-					(taskData.status === 'open')? 
-						<li className={getTaskListItemClass(taskData)} key={taskData.id}>
-							<Link to={Config.taskDetailScreenPath + '?taskid=' + taskData.id} className="do--list__item__link do--margin-wide--left">{taskData.title}</Link>
-							<button className="do--list__button-left" data-task-id={taskData.id} onClick={this.taskDoneHandler.bind(this)}> </button>
-						</li>
-					: ''
-				);
-				taskListHtml = <ul className="do--list do--margin-medium--top">{taskListItemsHtml}</ul>
-			}
+		var taskListHtml, taskListItemsHtml;
+		taskListHtml = <div className="do--info do--margin-medium--top">{Config.messages.emptyTaskList}</div>
+		if (this.props.tasks.length > 0) {
+			taskListItemsHtml = this.props.tasks.map((taskData)=>
+				(taskData.status === 'open')? 
+					<li className={getTaskListItemClass(taskData)} key={taskData.id} data-task-id={taskData.id}>
+						<Link to={Config.taskDetailScreenPath + '?taskid=' + taskData.id} className="do--list__item__link do--margin-wide--left">{taskData.title}</Link>
+						<button className="do--list__button-left" onClick={this.resolveTaskHandler.bind(this)}> </button>
+					</li>
+				: ''
+			);
+			taskListHtml = <ul className="do--list do--margin-medium--top">{taskListItemsHtml}</ul>
 		}
 		return taskListHtml
 	}
 
 	render() {
-		return (
-			<div>
-				<Header title='Úkoly' />
-				<Link to={Config.taskDetailScreenPath} className="do--button do--margin-medium--top">Přidat úkol</Link>
-				{this.getTaskListHtml()}
-			</div>
-		);
+		if (this.props.login) {
+			if (this.props.loading) {
+				return (
+					<div>
+						<Header title={Config.messages.tasks} />
+						<div>{Config.messages.loadingTaskList}</div>
+					</div>
+				)
+			} else { // taskList already loaded
+				return (
+					<div>
+						<Header title={Config.messages.tasks} />
+						<Link to={Config.taskDetailScreenPath} className="do--button do--margin-medium--top">{Config.messages.addTask}</Link>
+						{this.getTaskListHtml()}
+					</div>
+				)
+			}
+		} else { // not logged in
+			return (
+				<Header title={Config.messages.tasks} />
+			)
+		}
 	}
 };
 
 
-export default TaskList
+const mapStateToProps = (state) => {
+	return {
+		login: state.loginReducer.login,
+		loading: state.taskListReducer.taskListLoading,
+		tasks: state.taskListReducer.tasks
+    };
+};
+const mapDispatchToProps = (dispatch) => {
+	return {
+		updateSiteMapPosition: () => dispatch({ type: 'setSiteMapPosition', newPosition: 'taskList' }),
+		loadTaskList: () => dispatch({ type: "loadTaskList" }),
+		resolveTask: (taskId) => dispatch({ type: "resolveTask", taskId })
+	}
+}
+export default connect(mapStateToProps, mapDispatchToProps)(TaskList);
