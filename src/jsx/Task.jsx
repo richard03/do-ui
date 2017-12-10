@@ -37,6 +37,10 @@ class Task extends React.Component {
 		}
 	}
 
+	redirectToTaskList() {
+		this.props.history.push(Config.taskListScreenPath);
+	}
+
 	handleFieldChange(evt) {
 		let task = this.state.task;
 		task[evt.target.name] = evt.target.value;
@@ -62,27 +66,21 @@ class Task extends React.Component {
 			owner: this.props.login
 		}
 		this.props.submitTask(task);
+		if (this.props.mode == "create") {
+			this.redirectToTaskList();
+		}
 	}
 	handleResolveTask() {
-		// let task = this.state.task;
-		// task.status = 'done';
-		// this.setState({ task });
 		this.props.resolveTask()
-		this.props.history.push(Config.taskListScreenPath);
-
-
-//		this.setMode('resolve');
+		this.redirectToTaskList();
 	}
 	handleDeleteTask() {
-		// let task = this.state.task;
-		// task.status = 'deleted';
 		this.props.deleteTask()
-		this.props.history.push(Config.taskListScreenPath);
-
+		this.redirectToTaskList();
 	}
 
 	handleFormFieldsClick() {
-		if (this.mode() !== 'edit') {
+		if ( (this.mode() !== 'edit') && (this.mode() !== 'create') ) {
 			this.mode('edit');
 		}
 	}
@@ -149,7 +147,7 @@ class Task extends React.Component {
 					<ui.submitButton label={Config.messages.createTask} className="do--margin-medium--right" />
 					<Link to={Config.taskListScreenPath} className="do--button do--margin-medium--right">{Config.messages.back}</Link>		
 				</ui.show>
-				<ui.hide if={ (this.mode() == 'edit') || (this.state.mode == 'create')}>
+				<ui.hide if={ (this.mode() == 'edit') || (this.mode() == 'create') }>
 					<ui.submitButton label={Config.messages.resolved} className="do--margin-medium--right" onClick={this.handleResolveTask.bind(this)} />
 					<Link to={Config.taskListScreenPath} className="do--button do--margin-medium--right">{Config.messages.back}</Link>
 					<ui.button label={Config.messages.delete} className="do--float__right" onClick={this.handleDeleteTask.bind(this)} />
@@ -170,17 +168,17 @@ class Task extends React.Component {
 
 		if (this.props.mode == 'submitting-new') {
 			// if created, show list page
-			this.props.history.push(Config.taskListScreenPath);
+			this.redirectToTaskList();
 			return;
 		}
 
 		if (this.props.mode == 'submitting-resolve') {
 			// if done, show list page
-			this.props.history.push(Config.taskListScreenPath);
+			this.redirectToTaskList();
 			return;
 		}
 
-		if ( (this.props.mode == 'view') || (this.props.mode == 'edit') ) {
+		if ( (this.props.mode == 'view') || (this.props.mode == 'edit') || (this.props.mode == 'create') ) {
 			// show task detail
 			return (
 				<div>

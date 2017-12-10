@@ -12,7 +12,7 @@ class TaskList extends React.Component {
 		super(props)
 	}
 
-	componentDidMount() {
+	componentWillMount() {
 		this.props.updateSiteMapPosition();
 		if (this.props.login) {
 			this.props.loadTaskList()

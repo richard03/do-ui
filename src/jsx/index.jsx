@@ -1,20 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-// import { createStore } from 'redux'
+
 import { createStore, combineReducers } from 'redux'
 import { Provider } from 'react-redux'
-// import {
-// 	HashRouter as Router,
-// 	Route,
-// 	Switch,
-// 	browserHistory
-// } from 'react-router-dom'
 import {
 	HashRouter as Router,
 	Route,
 	Switch
 } from 'react-router-dom'
-// import { syncHistoryWithStore, routerReducer } from 'react-router-redux'
 import Moment from 'moment'
 
 import Config from './Config.jsx'
@@ -49,7 +42,6 @@ const initialState = {
 	}
 }
 
-// const store = createStore(loginReducer)
 const store = createStore(combineReducers({
 		loginReducer,
 		siteMapReducer,
@@ -113,16 +105,13 @@ function taskReducer(state = initialState, action) {
 			return Object.assign({}, state, { mode: action.newMode });
 
 		case 'login':
-console.log('login');
 			if ( store.getState().siteMapReducer.position != 'task' ) {
 				return state // do nothing
 			}
-console.log('got to fetch');
 			// else continue to fetchTask, load the task data
 		case 'fetchTask': 
 // 		( function () { // start separate namespace
-// console.log('fetching');
-// 				// const oldTask = store.getState().taskReducer.task;
+// 			})(); // end separate namespace
  				if (taskId && (taskId > 0)) {
  					// task exists (or at least taskId looks good)
  					fetch(Config.apiBaseUrl + Config.apiTaskListPath + '/' + taskId + '/')
@@ -140,27 +129,25 @@ console.log('got to fetch');
  							// end task mapping
  							store.dispatch({ type: 'updateTask', task });
  						});
- 					// return Object.assign({}, state, { mode: 'fetching' });
  					return Object.assign({}, state, { mode: 'fetching' });
- 				} else {
-// console.log('creating');
-// 					// task doesn't exist
-					let newTask = {
-						id: Math.floor(Math.random() * Config.maxId),
-						status: 'open',
-						title: '',
-						dueDate: Moment().format(Config.apiDateTimeFormat), 
-						acceptanceCriteria: '',
-						priority: 1,
-						owner: store.getState().loginReducer.login
-					}
-					return Object.assign({}, state, { task: newTask, mode: 'edit' });
  				}
+ 				// else continue to createTask
 
-// 			})(); // end separate namespace
+ 		case 'createTask':
+				// task doesn't exist
+				let newTask = {
+					id: Math.floor(Math.random() * Config.maxId),
+					status: 'open',
+					title: '',
+					dueDate: Moment().format(Config.apiDateTimeFormat), 
+					acceptanceCriteria: '',
+					priority: 1,
+					owner: store.getState().loginReducer.login
+				}
+				return Object.assign({}, state, { task: newTask, mode: 'create' });
+ 				
 
 		case 'updateTask':
-// console.log(action.task);
 			return Object.assign({}, state, { task: action.task, mode: 'view' });
 
 		case 'resolveTask': ( function() { // start separate namespace
