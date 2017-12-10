@@ -23,33 +23,16 @@ function Header({ title, login, handleLogin }) {
 
 };
 
-
-// function handleLogin() {
-// 	store.dispatch({ type: 'login', login: 'richard.sery.3@gmail.com' });
-// }
-
-// export default connect(
-// 	state => ({ userName: state.userName }),
-// 	{ title }
-// )(Header)
-
-
-
-// export default Header
-
 const mapStateToProps = (state) => {
 	return {
 		login: state.loginReducer.login
-		// hasErrored: state.itemsHasErrored,
-		// isLoading: state.itemsIsLoading
 	};
 };
 const mapDispatchToProps = (dispatch) => {
     return {
-    		handleLogin: function () {
-    			return dispatch({ type: 'login', login: 'richard.sery.3@gmail.com' })
-    		}
-//        fetchData: (url) => dispatch(itemsFetchData(url))
+		handleLogin: function () {
+			return dispatch({ type: 'login', login: 'richard.sery.3@gmail.com' })
+		}
     };
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Header);

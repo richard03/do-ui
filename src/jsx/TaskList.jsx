@@ -13,7 +13,10 @@ class TaskList extends React.Component {
 	}
 
 	componentDidMount() {
-		this.props.loadTaskList()
+		this.props.updateSiteMapPosition();
+		if (this.props.login) {
+			this.props.loadTaskList()
+		}
 	}
 
 	resolveTaskHandler(evt) {
@@ -83,12 +86,13 @@ class TaskList extends React.Component {
 const mapStateToProps = (state) => {
 	return {
 		login: state.loginReducer.login,
-		loading: state.taskReducer.taskListLoading,
-		tasks: state.taskReducer.tasks
+		loading: state.taskListReducer.taskListLoading,
+		tasks: state.taskListReducer.tasks
     };
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
+		updateSiteMapPosition: () => dispatch({ type: 'setSiteMapPosition', newPosition: 'taskList' }),
 		loadTaskList: () => dispatch({ type: "loadTaskList" }),
 		resolveTask: (taskId) => dispatch({ type: "resolveTask", taskId })
 	}
