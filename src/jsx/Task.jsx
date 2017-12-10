@@ -6,54 +6,53 @@ import Moment from 'moment'
 import Config from './Config.jsx'
 import ui from './uiElements.jsx'
 import { getQueryVariable } from './lib.jsx'
+
 import Header from './Header.jsx'
 
 
 
 class Task extends React.Component {
 	constructor(props) {
-		super(props);
+		super(props)
 
 		this.state = {
 			task : this.props.task
 		};
 	}
 	componentWillReceiveProps(nextProps) {
-		this.setState({ task: nextProps.task });
+		this.setState({ task: nextProps.task })
 
 	}
 	componentWillMount(nextProps, nextState) {
-		this.props.updateSiteMapPosition(); // notify global sitemap that I am here
-		if (this.props.login) {
-			this.props.fetchTask();
-		}
+		this.props.updateSiteMapPosition() // notify global sitemap that I am here
+		this.props.fetchTask()
 	}
 
 	mode(newMode) {
 		if (typeof newMode == 'string') { // set mode
-			this.props.setMode(newMode);
+			this.props.setMode(newMode)
 		} else { // get current mode
 			return this.props.mode
 		}
 	}
 
 	redirectToTaskList() {
-		this.props.history.push(Config.taskListScreenPath);
+		this.props.history.push(Config.taskListScreenPath)
 	}
 
 	handleFieldChange(evt) {
-		let task = this.state.task;
-		task[evt.target.name] = evt.target.value;
-		this.setState({ task });
+		let task = this.state.task
+		task[evt.target.name] = evt.target.value
+		this.setState({ task })
 	}
 	handleDeadlineChange(date) {
-		let task = this.state.task;
-		task.dueDate = date.format(Config.apiDateTimeFormat);
-		this.setState({ task });
+		let task = this.state.task
+		task.dueDate = date.format(Config.apiDateTimeFormat)
+		this.setState({ task })
 	}
 
 	handleFormSubmit(evt) {
-		evt.preventDefault();
+		evt.preventDefault()
 
 		// task mapping
 		let task = {
@@ -63,25 +62,25 @@ class Task extends React.Component {
 			dueDate: this.state.task.dueDate,
 			status: this.state.task.status,
 			priority: this.state.task.priority,
-			owner: this.props.login
+			owner: this.props.user.email
 		}
-		this.props.submitTask(task);
+		this.props.submitTask(task)
 		if (this.props.mode == "create") {
-			this.redirectToTaskList();
+			this.redirectToTaskList()
 		}
 	}
 	handleResolveTask() {
 		this.props.resolveTask()
-		this.redirectToTaskList();
+		this.redirectToTaskList()
 	}
 	handleDeleteTask() {
 		this.props.deleteTask()
-		this.redirectToTaskList();
+		this.redirectToTaskList()
 	}
 
 	handleFormFieldsClick() {
 		if ( (this.mode() !== 'edit') && (this.mode() !== 'create') ) {
-			this.mode('edit');
+			this.mode('edit')
 		}
 	}
 
@@ -158,30 +157,22 @@ class Task extends React.Component {
 
 	render() {
 
-		if (!this.props.login) { // not logged in
-			return (
-				<div>
-					<Header title={Config.messages.task} />
-				</div>
-			)
-		}
-
 		if (this.props.mode == 'submitting-new') {
 			// if created, show list page
-			this.redirectToTaskList();
-			return;
+			this.redirectToTaskList()
+			return
 		}
 
 		if (this.props.mode == 'submitting-resolve') {
 			// if done, show list page
-			this.redirectToTaskList();
-			return;
+			this.redirectToTaskList()
+			return
 		}
 
 		if ( (this.props.mode == 'view') || (this.props.mode == 'edit') || (this.props.mode == 'create') ) {
 			// show task detail
 			return (
-				<div>
+				<div className="do--box">
 					<Header title={Config.messages.task} />
 					<form onSubmit={this.handleFormSubmit.bind(this)}>
 						{this.renderFormFields()}
@@ -192,7 +183,7 @@ class Task extends React.Component {
 		}
 
 		return (
-			<div>
+			<div className="do--box">
 				<Header title={Config.messages.task} />
 				<div className="do--info do--margin-medium--top">{Config.messages.loadingData}</div>
 			</div>
@@ -201,16 +192,13 @@ class Task extends React.Component {
 	}
 };
 
-// export default Task
-
-
 const mapStateToProps = (state) => {
 	return {
-		login: state.loginReducer.login,
+		user: state.loginReducer.user,
 		mode: state.taskReducer.mode,
 		task: state.taskReducer.task
-	};
-};
+	}
+}
 const mapDispatchToProps = (dispatch) => {
 	return {
 		updateSiteMapPosition: () => dispatch({ type: 'setSiteMapPosition', newPosition: 'task' }),
@@ -221,4 +209,4 @@ const mapDispatchToProps = (dispatch) => {
 		deleteTask: () => dispatch({ type: 'deleteTask' })
 	}
 }
-export default connect(mapStateToProps, mapDispatchToProps)(Task);
+export default connect(mapStateToProps, mapDispatchToProps)(Task)

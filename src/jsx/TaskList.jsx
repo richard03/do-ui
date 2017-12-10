@@ -4,7 +4,11 @@ import { connect } from 'react-redux'
 
 import Config from './Config.jsx'
 import { addClassName } from './lib.jsx'
+import ui from './uiElements.jsx'
+
 import Header from './Header.jsx'
+
+
 
 class TaskList extends React.Component {
 
@@ -13,10 +17,8 @@ class TaskList extends React.Component {
 	}
 
 	componentWillMount() {
-		this.props.updateSiteMapPosition();
-		if (this.props.login) {
-			this.props.loadTaskList()
-		}
+		this.props.updateSiteMapPosition()
+		this.props.loadTaskList()
 	}
 
 	resolveTaskHandler(evt) {
@@ -28,16 +30,16 @@ class TaskList extends React.Component {
 
 	getTaskListHtml() {
 		function getTaskListItemClass(taskData) {
-			let buffer = [];
-			buffer.push("do--list__item");
-			buffer.push("do--list__item--no-padding");
+			let buffer = []
+			buffer.push("do--list__item")
+			buffer.push("do--list__item--no-padding")
 			switch("" + taskData.priority) {
 				case "0": buffer.push("do-list__item--low-priority"); break;
 				case "1": buffer.push("do-list__item--normal-priority"); break;
 				case "2": buffer.push("do-list__item--high-priority"); break;
 				case "3": buffer.push("do-list__item--critical-priority"); break;
 			}
-			return buffer.join(" ");
+			return buffer.join(" ")
 		}
 
 		var taskListHtml, taskListItemsHtml;
@@ -50,46 +52,40 @@ class TaskList extends React.Component {
 						<button className="do--list__button-left" onClick={this.resolveTaskHandler.bind(this)}> </button>
 					</li>
 				: ''
-			);
+			)
 			taskListHtml = <ul className="do--list do--margin-medium--top">{taskListItemsHtml}</ul>
 		}
 		return taskListHtml
 	}
 
 	render() {
-		if (this.props.login) {
-			if (this.props.loading) {
-				return (
-					<div>
-						<Header title={Config.messages.tasks} />
-						<div>{Config.messages.loadingTaskList}</div>
-					</div>
-				)
-			} else { // taskList already loaded
-				return (
-					<div>
-						<Header title={Config.messages.tasks} />
-						<Link to={Config.taskDetailScreenPath} className="do--button do--margin-medium--top">{Config.messages.addTask}</Link>
-						{this.getTaskListHtml()}
-					</div>
-				)
-			}
-		} else { // not logged in
+		if (this.props.loading) {
 			return (
-				<Header title={Config.messages.tasks} />
+				<div className="do--box">
+					<Header title={Config.messages.tasks} />
+					<div>{Config.messages.loadingTaskList}</div>
+				</div>
+			)
+		} else { // taskList already loaded
+			return (
+				<div className="do--box">
+					<Header title={Config.messages.tasks} />
+					<Link to={Config.taskDetailScreenPath} className="do--button do--margin-medium--top">{Config.messages.addTask}</Link>
+					{this.getTaskListHtml()}
+				</div>
 			)
 		}
 	}
-};
+}
 
 
 const mapStateToProps = (state) => {
 	return {
-		login: state.loginReducer.login,
+		user: state.loginReducer.user,
 		loading: state.taskListReducer.taskListLoading,
 		tasks: state.taskListReducer.tasks
-    };
-};
+	}
+}
 const mapDispatchToProps = (dispatch) => {
 	return {
 		updateSiteMapPosition: () => dispatch({ type: 'setSiteMapPosition', newPosition: 'taskList' }),
@@ -97,4 +93,4 @@ const mapDispatchToProps = (dispatch) => {
 		resolveTask: (taskId) => dispatch({ type: "resolveTask", taskId })
 	}
 }
-export default connect(mapStateToProps, mapDispatchToProps)(TaskList);
+export default connect(mapStateToProps, mapDispatchToProps)(TaskList)

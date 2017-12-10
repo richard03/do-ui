@@ -13,13 +13,14 @@ import Moment from 'moment'
 import Config from './Config.jsx'
 import TaskList from './TaskList.jsx'
 import Task from './Task.jsx'
-import { getQueryVariable } from './lib.jsx'
+import { getQueryVariable, initAuth2, getAuth2 } from './lib.jsx'
 
 
 
 const initialState = {
 	loginReducer: {
-		login: ''
+		loginStatus: 'unknown',
+		user: {}
 	},
 	siteMapReducer: {
 		position: 'unknown'
@@ -32,12 +33,12 @@ const initialState = {
 		mode: 'initializing',
 		task: {
 			id: -1,
-		 	status: 'new',
-		 	title: '',
-		 	dueDate: Moment().format(Config.apiDateTimeFormat),
-		 	acceptanceCriteria: '',
-		 	priority: 1,
-		 	owner: '',
+			status: 'new',
+			title: '',
+			dueDate: Moment().format(Config.apiDateTimeFormat),
+			acceptanceCriteria: '',
+			priority: 1,
+			owner: '',
 		}
 	}
 }
@@ -52,11 +53,49 @@ const store = createStore(combineReducers({
 	window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 )
 
+store.dispatch({ type: 'login' });
+
+
 
 function loginReducer(state = initialState, action) {
+	
 	switch (action.type) {
-		case 'login': 
-			return Object.assign({}, state, { login: action.login });
+		case 'login':
+
+			gapi.load('auth2', function () {
+				gapi.auth2.init({
+					client_id: Config.gApiKey
+				}).then(onInitSuccess, onInitFailure);
+
+				function onInitSuccess(auth) {
+					let googleUser = auth.currentUser.get();
+					if ( googleUser.isSignedIn() ) {
+						// user already authenticated
+						let googleUserProfile = googleUser.getBasicProfile();
+						let user = {
+							id: googleUserProfile.getId(),
+							name: googleUserProfile.getName(),
+							givenName: googleUserProfile.getGivenName(),
+							familyName: googleUserProfile.getFamilyName(),
+							imageUrl: googleUserProfile.getImageUrl(),
+							email: googleUserProfile.getEmail()
+						}
+						store.dispatch({ type: 'setUserData', user, loginStatus: 'ok'})
+					} else {
+						auth.signIn({ ux_mode: 'redirect' });
+						// leaving application for now, Google login screen is going to be displayed
+					}
+				}
+
+				function onInitFailure() {
+					// TODO - Google auth init failed
+				}
+			});	
+			return Object.assign({}, state, { loginStatus: "initializing" });			
+
+		case 'setUserData':
+			return Object.assign({}, state, { user: action.user, loginStatus: action.loginStatus });
+
 		default:
 			return state
 	}
@@ -93,7 +132,7 @@ function taskListReducer(state = initialState, action) {
 
 		default:
 			return state
-	}	
+	}
 }
 
 function taskReducer(state = initialState, action) {
@@ -110,28 +149,26 @@ function taskReducer(state = initialState, action) {
 			}
 			// else continue to fetchTask, load the task data
 		case 'fetchTask': 
-// 		( function () { // start separate namespace
-// 			})(); // end separate namespace
- 				if (taskId && (taskId > 0)) {
- 					// task exists (or at least taskId looks good)
- 					fetch(Config.apiBaseUrl + Config.apiTaskListPath + '/' + taskId + '/')
- 						.then(result=>result.json())
- 						.then((taskData) => {
- 							// task mapping
-							let task = {};
-							task.id = taskData['id'];
-							task.title = taskData['title'];
-							task.acceptanceCriteria = taskData['acceptance_criteria'];
-							task.dueDate = taskData['due_date'];
-							task.status = taskData['status'];
-							task.priority = taskData['priority'];
-							task.owner = taskData['owner'];
- 							// end task mapping
- 							store.dispatch({ type: 'updateTask', task });
- 						});
- 					return Object.assign({}, state, { mode: 'fetching' });
- 				}
- 				// else continue to createTask
+			if (taskId && (taskId > 0)) {
+				// task exists (or at least taskId looks good)
+				fetch(Config.apiBaseUrl + Config.apiTaskListPath + '/' + taskId + '/')
+					.then(result=>result.json())
+					.then((taskData) => {
+						// task mapping
+					let task = {};
+					task.id = taskData['id'];
+					task.title = taskData['title'];
+					task.acceptanceCriteria = taskData['acceptance_criteria'];
+					task.dueDate = taskData['due_date'];
+					task.status = taskData['status'];
+					task.priority = taskData['priority'];
+					task.owner = taskData['owner'];
+					// end task mapping
+					store.dispatch({ type: 'updateTask', task });
+				});
+				return Object.assign({}, state, { mode: 'fetching' });
+			}
+			// else continue to createTask
 
  		case 'createTask':
 				// task doesn't exist
@@ -142,10 +179,10 @@ function taskReducer(state = initialState, action) {
 					dueDate: Moment().format(Config.apiDateTimeFormat), 
 					acceptanceCriteria: '',
 					priority: 1,
-					owner: store.getState().loginReducer.login
+					owner: store.getState().loginReducer.user.email
 				}
 				return Object.assign({}, state, { task: newTask, mode: 'create' });
- 				
+				
 
 		case 'updateTask':
 			return Object.assign({}, state, { task: action.task, mode: 'view' });

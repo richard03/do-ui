@@ -1,38 +1,38 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-function Header({ title, login, handleLogin }) {
+import ui from './uiElements.jsx'
 
-	if (login) {
-		return (
-			<div className="do--float">
-				<h1 className="do--title do--float__left">{title}</h1>
-				<div className="do--float__right">{login}</div>
-			</div>
-		);
-	} else { // not logged in
+
+function Header({ title, user, handleLogout }) {
+
+	if (user && user.name) {
 		return (
 			<div className="do--float">
 				<h1 className="do--title do--float__left">{title}</h1>
 				<div className="do--float__right">
-					<button className="do-button" onClick={handleLogin}>Přihlášení</button>
+					<div>{user.name}</div>
+					<div><small><a href="https://accounts.google.com/logout">Odhlásit</a></small></div>
 				</div>
 			</div>
-		);
+		)
+	} else {
+		// signing in...
+		return (
+			<div></div>
+		)
 	}
 
 };
 
 const mapStateToProps = (state) => {
 	return {
-		login: state.loginReducer.login
+		user: state.loginReducer.user
 	};
 };
 const mapDispatchToProps = (dispatch) => {
-    return {
-		handleLogin: function () {
-			return dispatch({ type: 'login', login: 'richard.sery.3@gmail.com' })
-		}
-    };
+	return {
+		// no actions mapped
+	};
 };
-export default connect(mapStateToProps, mapDispatchToProps)(Header);
+export default connect(mapStateToProps, mapDispatchToProps)(Header)
