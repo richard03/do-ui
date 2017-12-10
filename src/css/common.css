@@ -134,9 +134,9 @@ textarea.do--data-field__control {
 
 
 .do--float:after {
-  content: "" !important;
-  display: table !important;
-  clear: both !important;
+	content: "" !important;
+	display: table !important;
+	clear: both !important;
 }
 .do--float__left {
 	float: left !important;
