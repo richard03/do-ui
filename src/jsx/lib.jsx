@@ -19,5 +19,49 @@ function getQueryVariable(varName) {
 	return null;
 }
 
+function sendGetRequestToRestApi(url, authToken) {
+	return new Promise( function (resolve, reject) {
+		fetch(url, {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
+				'Authorization': 'Basic ' + btoa( authToken )
+			})
+			.then(result=>result.json())
+			.then(data=>resolve(data));
+	});
+}
 
-export { addClassName, getQueryVariable }
+function sendPostRequestToRestApi(url, authToken, dataObject) {
+	return new Promise(function (resolve, reject) {
+		let postBody = new FormData();
+		for (var k in dataObject) {
+			if (dataObject.hasOwnProperty(k)) {
+				postBody.set(k, dataObject[k]);
+			}
+		}
+		fetch(url, {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+					'Authorization': 'Basic ' + btoa( authToken ),
+					method: 'POST',
+					body: postBody
+			})
+			.then( responseData => resolve( responseData ) );
+	});
+}
+
+
+function sendDeleteRequestToRestApi(url, authToken) {
+	return new Promise(function (resolve, reject) {
+		fetch(url, {
+				'Accept': 'application/json',
+				'Content-Type': 'application/json',
+				'Authorization': 'Basic ' + btoa( authToken ),
+				method: 'DELETE'
+			})
+			.then( responseData => resolve( responseData ) );
+	});
+}
+
+
+export { addClassName, getQueryVariable, sendGetRequestToRestApi, sendPostRequestToRestApi, sendDeleteRequestToRestApi }

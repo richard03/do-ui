@@ -13,14 +13,16 @@ import Moment from 'moment'
 import Config from './Config.jsx'
 import TaskList from './TaskList.jsx'
 import Task from './Task.jsx'
-import { getQueryVariable, initAuth2, getAuth2 } from './lib.jsx'
+import { getQueryVariable, initAuth2, getAuth2, sendGetRequestToRestApi, sendPostRequestToRestApi } from './lib.jsx'
 
 
 
 const initialState = {
 	loginReducer: {
 		loginStatus: 'unknown',
-		user: {}
+		user: {
+			email: ''
+		}
 	},
 	siteMapReducer: {
 		position: 'unknown'
@@ -112,23 +114,20 @@ function siteMapReducer(state = initialState, action) {
 
 function taskListReducer(state = initialState, action) {
 	switch (action.type) {
-		case 'login':
-			if ( store.getState().siteMapReducer.position != 'taskList' ) {
-				return state // do nothing
-			}
+		// case 'login':
+		// 	if ( store.getState().siteMapReducer.position != 'taskList' ) {
+		// 		return state // do nothing
+		// 	}
 			// else continue, load the list
 		case 'loadTaskList':
 			// send request to server to start loading tasks
-			fetch(Config.apiBaseUrl + Config.apiTaskListPath)
-				.then(result=>result.json())
-				.then(function (tasks) {
-					store.dispatch({ type: 'populateTaskList', tasks: tasks })
-				})
+			sendGetRequestToRestApi( Config.apiBaseUrl + Config.apiTaskListPath, store.getState().loginReducer.user.email )
+				.then( tasks => store.dispatch({ type: 'populateTaskList', tasks: tasks }) )
 			return Object.assign({}, state, { taskListLoading: true });
 
 		case 'populateTaskList':
 			// populate task list after server returned the list of tasks
-			return Object.assign({}, state, { tasks: action.tasks, taskListLoading: false });
+			return Object.assign({}, state, { tasks: action.tasks, taskListLoading: false })
 
 		default:
 			return state
@@ -136,37 +135,33 @@ function taskListReducer(state = initialState, action) {
 }
 
 function taskReducer(state = initialState, action) {
-	const taskId = action.taskId || getQueryVariable('taskid');
+	const taskId = action.taskId || getQueryVariable('taskid')
 
 	switch (action.type) {
 
 		case 'setTaskFormMode':
-			return Object.assign({}, state, { mode: action.newMode });
+			return Object.assign({}, state, { mode: action.newMode })
 
-		case 'login':
-			if ( store.getState().siteMapReducer.position != 'task' ) {
-				return state // do nothing
-			}
+		// case 'login':
+		// 	if ( store.getState().siteMapReducer.position != 'task' ) {
+		// 		return state // do nothing
+		// 	}
 			// else continue to fetchTask, load the task data
 		case 'fetchTask': 
 			if (taskId && (taskId > 0)) {
 				// task exists (or at least taskId looks good)
-				fetch(Config.apiBaseUrl + Config.apiTaskListPath + '/' + taskId + '/')
-					.then(result=>result.json())
-					.then((taskData) => {
-						// task mapping
-					let task = {};
-					task.id = taskData['id'];
-					task.title = taskData['title'];
-					task.acceptanceCriteria = taskData['acceptance_criteria'];
-					task.dueDate = taskData['due_date'];
-					task.status = taskData['status'];
-					task.priority = taskData['priority'];
-					task.owner = taskData['owner'];
-					// end task mapping
-					store.dispatch({ type: 'updateTask', task });
-				});
-				return Object.assign({}, state, { mode: 'fetching' });
+				sendGetRequestToRestApi(Config.apiBaseUrl + Config.apiTaskListPath + '/' + taskId + '/', store.getState().loginReducer.user.email )
+					.then( taskData => store.dispatch({ type: 'updateTask', task: {
+							id: taskData['id'],
+							title: taskData['title'],
+							acceptanceCriteria: taskData['acceptance_criteria'],
+							dueDate: taskData['due_date'],
+							status: taskData['status'],
+							priority: taskData['priority'],
+							owner: taskData['owner']}
+						})
+					)
+				return Object.assign({}, state, { mode: 'fetching' })
 			}
 			// else continue to createTask
 
@@ -181,49 +176,38 @@ function taskReducer(state = initialState, action) {
 					priority: 1,
 					owner: store.getState().loginReducer.user.email
 				}
-				return Object.assign({}, state, { task: newTask, mode: 'create' });
+				return Object.assign({}, state, { task: newTask, mode: 'create' })
 				
 
 		case 'updateTask':
 			return Object.assign({}, state, { task: action.task, mode: 'view' });
 
-		case 'resolveTask': ( function() { // start separate namespace
-				let postBody = new FormData();
-				postBody.set('status', "done");
-				fetch(Config.apiBaseUrl + Config.apiTaskListPath + '/' + taskId + '/', { 
-					method: 'POST',
-					body: postBody
-				}).then(function (tasks) {
-					store.dispatch({ type: 'loadTaskList' })
-				});
-			} )(); // end separate namespace
+		case 'resolveTask':
+			sendPostRequestToRestApi(Config.apiBaseUrl + Config.apiTaskListPath + '/' + taskId + '/', store.getState().loginReducer.user.email, { status: 'done'})
+				.then( () => store.dispatch({ type: 'loadTaskList' }) )
 			return Object.assign({}, state, { mode: 'resolved' });
 
 		case 'deleteTask':
-			fetch(Config.apiBaseUrl + Config.apiTaskListPath + '/' + taskId + '/', {
-					method: 'DELETE'
-				}).then(function (result) {
+			sendDeleteRequestToRestApi(Config.apiBaseUrl + Config.apiTaskListPath + '/' + taskId + '/', store.getState().loginReducer.user.email )
+				.then( () => {
 					store.dispatch({ type: 'loadTaskList' })
 				});
 			return Object.assign({}, state, { mode: 'deleted' });
 
-		case 'submitTask': ( function() {  // start separate namespace
-		 		let postBody = new FormData();
-				postBody.set('id', action.task.id);
-				postBody.set('title', action.task.title);
-				postBody.set('acceptance_criteria', action.task.acceptanceCriteria);
-				postBody.set('due_date', action.task.dueDate);
-				postBody.set('status', action.task.status);
-				postBody.set('priority', action.task.priority);
-				postBody.set('owner', action.task.owner);
-				fetch(Config.apiBaseUrl + Config.apiTaskListPath + '/' + action.task.id + '/', {
-						method: 'POST',
-						body: postBody
-					}).then(function () {
-						store.dispatch({ type: 'taskSubmitted', taskId: action.task.id })
-					})
-					return Object.assign({}, state, { mode: 'submitting' });
-			 } ) (); // end separate namespace
+		case 'submitTask': 
+			sendPostRequestToRestApi(Config.apiBaseUrl + Config.apiTaskListPath + '/' + action.task.id + '/', store.getState().loginReducer.user.email,	{
+					id: action.task.id,
+					title: action.task.title,
+					acceptance_criteria: action.task.acceptanceCriteria,
+					due_date: action.task.dueDate,
+					status: action.task.status,
+					priority: action.task.priority,
+					owner: action.task.owner
+				})
+				.then( () => {
+					store.dispatch({ type: 'taskSubmitted', taskId: action.task.id })
+				})
+			return Object.assign({}, state, { mode: 'submitting' });
 
 		case 'taskSubmitted':
 
