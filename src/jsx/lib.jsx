@@ -19,47 +19,68 @@ function getQueryVariable(varName) {
 	return null;
 }
 
-function sendGetRequestToRestApi(url, authToken) {
-	return new Promise( function (resolve, reject) {
-		fetch(url, {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json',
-				'Authorization': 'Basic ' + btoa( authToken )
-			})
-			.then(result=>result.json())
-			.then(data=>resolve(data));
-	});
-}
 
-function sendPostRequestToRestApi(url, authToken, dataObject) {
-	return new Promise(function (resolve, reject) {
-		let postBody = new FormData();
-		for (var k in dataObject) {
-			if (dataObject.hasOwnProperty(k)) {
-				postBody.set(k, dataObject[k]);
-			}
-		}
-		fetch(url, {
+/**
+ * cfg = { url, login: { access_token } }
+ */
+function sendGetRequestToRestApi(cfg) {
+	return new Promise( function (resolve, reject) {
+		if (cfg.login && cfg.login.access_token) {
+			fetch(cfg.url, {
 					'Accept': 'application/json',
 					'Content-Type': 'application/json',
-					'Authorization': 'Basic ' + btoa( authToken ),
-					method: 'POST',
-					body: postBody
-			})
-			.then( responseData => resolve( responseData ) );
+					'Authorization': "Bearer " + cfg.login.access_token,
+				})
+				.then(result=>result.json())
+				.then(data=>resolve(data));
+		} else {
+			reject({ message: "Couldn't connect - access_token missing." });
+		}
 	});
 }
 
-
-function sendDeleteRequestToRestApi(url, authToken) {
+/**
+ * cfg = { url, login: { access_token } }
+ */
+function sendPostRequestToRestApi(cfg, dataObject) {
 	return new Promise(function (resolve, reject) {
-		fetch(url, {
-				'Accept': 'application/json',
-				'Content-Type': 'application/json',
-				'Authorization': 'Basic ' + btoa( authToken ),
-				method: 'DELETE'
-			})
-			.then( responseData => resolve( responseData ) );
+		if (cfg.login && cfg.login.access_token) {
+			let postBody = new FormData();
+			for (var k in dataObject) {
+				if (dataObject.hasOwnProperty(k)) {
+					postBody.set(k, dataObject[k]);
+				}
+			}
+			fetch(cfg.url, {
+						'Accept': 'application/json',
+						'Content-Type': 'application/json',
+						'Authorization': "Bearer " + cfg.login.access_token,
+						method: 'POST',
+						body: postBody
+				})
+				.then( responseData => resolve( responseData ) );
+		} else {
+			reject({ message: "Couldn't connect - access_token missing." });
+		}
+	});
+}
+
+/**
+ * cfg = { url, login: { access_token } }
+ */
+function sendDeleteRequestToRestApi(cfg) {
+	return new Promise(function (resolve, reject) {
+		if (cfg.login && cfg.login.access_token) {
+			fetch(cfg.url, {
+					'Accept': 'application/json',
+					'Content-Type': 'application/json',
+					'Authorization': "Bearer " + cfg.login.access_token,
+					method: 'DELETE'
+				})
+				.then( responseData => resolve( responseData ) );
+		} else {
+			reject({ message: "Couldn't connect - access_token missing." });
+		}
 	});
 }
 

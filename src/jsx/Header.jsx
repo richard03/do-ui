@@ -4,14 +4,14 @@ import { connect } from 'react-redux'
 import ui from './uiElements.jsx'
 
 
-function Header({ title, user, handleLogout }) {
+function Header({ title, login, handleLogout }) {
 
-	if (user && user.name) {
+	if (login && login.name) {
 		return (
 			<div className="do--float">
 				<h1 className="do--title do--float__left">{title}</h1>
 				<div className="do--float__right">
-					<div>{user.name}</div>
+					<div>{login.name}</div>
 					<div><small><a href="https://accounts.google.com/logout">Odhlásit</a></small></div>
 				</div>
 			</div>
@@ -27,7 +27,7 @@ function Header({ title, user, handleLogout }) {
 
 const mapStateToProps = (state) => {
 	return {
-		user: state.loginReducer.user
+		login: state.loginReducer.login
 	};
 };
 const mapDispatchToProps = (dispatch) => {

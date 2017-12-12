@@ -52,6 +52,10 @@ function hide(props) {
 }
 
 
+
+/**
+ * INPUT
+ */
 function textField(props) {
 	let className = 'do--data-field';
 	if (props.className) className += ' ' + props.className;
@@ -67,6 +71,7 @@ function textField(props) {
 		default: // view mode
 			return (
 				<div className={className}>
+					<h3 className="do--data-field__label">{props.label}</h3>
 					{props.value}
 					<input type="hidden" name={props.name} value={props.value}/>
 				</div>
@@ -74,6 +79,11 @@ function textField(props) {
 	}
 }
 
+
+
+/**
+ * DATEPICKER
+ */
 function dateField(props) {
 	let className = 'do--data-field';
 	if (props.className) className += ' ' + props.className;
@@ -101,24 +111,11 @@ function dateField(props) {
 	}
 }
 
-// function selectTag(props) {
-// 	let buffer = [];
-// 	buffer.push('<option value=""></option>');
-// 	props.options.forEach(function (option) {
-// 		buffer.push('<option value="');
-// 		buffer.push(option.value);
-// 		buffer.push('">');
-// 		buffer.push(option.label);
-// 		buffer.push('</option>');
-// 	});
-// 	let optionsHtml = buffer.join('');
-// 	return(
-// 		<select name={props.name} value={props.value} onChange={props.handleValueChange} className="do--data-field__control">
-// 			{optionsHtml}
-// 		</select>
-// 	);
-// }
 
+
+/**
+ * Text content for SELECT
+ */
 function selectView(props) {
 	let i = 0;
 	while (i < props.options.length) {
@@ -130,6 +127,11 @@ function selectView(props) {
 	}
 }
 
+
+
+/**
+ * SELECT
+ */
 function selectField(props) {
 	let className = 'do--data-field do--data-field--select';
 	if (props.className) className += ' ' + props.className;
@@ -149,6 +151,7 @@ function selectField(props) {
 		default: // view mode
 			return (
 				<div className={className}>
+					<h3 className="do--data-field__label">{props.label}</h3>
 					{selectView(props)}
 					<input type="hidden" name={props.name} value={props.value}/>
 				</div>
@@ -156,6 +159,11 @@ function selectField(props) {
 	}
 }
 
+
+
+/**
+ * TEXTAREA
+ */
 function textAreaField(props) {
 	let className = 'do--data-field';
 	if (props.className) className += ' ' + props.className;
@@ -181,6 +189,8 @@ function textAreaField(props) {
 	}
 }
 
+
+
 /**
  * Submit button
  */
@@ -190,6 +200,8 @@ function submitButton(props) {
 		<button {...props} className={className}>{props.label}</button>
 	)
 }
+
+
 
 /**
  * Non-submitting button
