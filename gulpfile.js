@@ -11,7 +11,7 @@ gulp.task('default', function () {
 		.pipe(gulp.dest('./build'));
 });
 
-// gulp.task('watch', function () {
-// 	gulp.watch('./src/*.html', ['default']);
-// 	gulp.watch('./src/css/*.css', ['default']);
-// });
+gulp.task('watch', function() {
+    gulp.watch('./src/*.html', ['default'])
+    gulp.watch('./src/css/*.css', ['default'])
+});
