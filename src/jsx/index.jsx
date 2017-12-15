@@ -91,14 +91,6 @@ function init(auth, login) {
 		window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 	)
 
-	/**
-	 * Dispatch action after X miliseconds
-	 */
-	store.dispatchLater = function(delay, action) {
-	//	setTimeout( () => this.dispatch(action), delay);
-	}
-
-
 
 	function loginReducer(state = initialState, action) {
 		return state
@@ -115,11 +107,7 @@ function init(auth, login) {
 
 	function taskListReducer(state = initialState, action) {
 		switch (action.type) {
-			// case 'login':
-			// 	if ( store.getState().siteMapReducer.position != 'taskList' ) {
-			// 		return state // do nothing
-			// 	}
-				// else continue, load the list
+
 			case 'loadTaskList':
 				// send request to server to start loading tasks
 				sendGetRequestToRestApi({
@@ -128,7 +116,7 @@ function init(auth, login) {
 						})
 					.then(
 						tasks => store.dispatch({ type: 'populateTaskList', tasks: tasks }),
-						store.dispatchLater(500, action)
+						() => store.dispatch({ type: 'reportFailure' })
 					)
 				return Object.assign({}, state, { taskListLoading: true });
 
@@ -149,11 +137,6 @@ function init(auth, login) {
 			case 'setTaskFormMode':
 				return Object.assign({}, state, { mode: action.newMode })
 
-			// case 'login':
-			// 	if ( store.getState().siteMapReducer.position != 'task' ) {
-			// 		return state // do nothing
-			// 	}
-				// else continue to fetchTask, load the task data
 			case 'fetchTask': 
 				if (taskId && (taskId > 0)) {
 					// task exists (or at least taskId looks good)
@@ -172,24 +155,24 @@ function init(auth, login) {
 									owner: taskData['owner']
 								}
 							}),
-							store.dispatchLater(500, action)
+							() => store.dispatch({ type: 'reportFailure' })
 						)
 					return Object.assign({}, state, { mode: 'fetching' })
 				}
 				// else continue to createTask
 
 	 		case 'createTask':
-					// task doesn't exist
-					let newTask = {
-						id: Math.floor(Math.random() * Config.maxId),
-						status: 'open',
-						title: '',
-						dueDate: Moment().format(Config.apiDateTimeFormat), 
-						acceptanceCriteria: '',
-						priority: 1,
-						owner: store.getState().loginReducer.user.email
-					}
-					return Object.assign({}, state, { task: newTask, mode: 'create' })
+				// task doesn't exist
+				let newTask = {
+					id: Math.floor(Math.random() * Config.maxId),
+					status: 'open',
+					title: '',
+					dueDate: Moment().format(Config.apiDateTimeFormat), 
+					acceptanceCriteria: '',
+					priority: 1,
+					owner: store.getState().loginReducer.login.email
+				}
+				return Object.assign({}, state, { task: newTask, mode: 'create' })
 					
 
 			case 'updateTask':
@@ -204,7 +187,7 @@ function init(auth, login) {
 						})
 					.then(
 						() => store.dispatch({ type: 'loadTaskList' }),
-						store.dispatchLater(500, action)
+						() => store.dispatch({ type: 'reportFailure' })
 					)
 				return Object.assign({}, state, { mode: 'resolved' });
 
@@ -215,7 +198,7 @@ function init(auth, login) {
 						})
 					.then( () => {
 						store.dispatch({ type: 'loadTaskList' }),
-						store.dispatchLater(500, action)
+						() => store.dispatch({ type: 'reportFailure' })
 					});
 				return Object.assign({}, state, { mode: 'deleted' });
 
@@ -230,11 +213,11 @@ function init(auth, login) {
 							due_date: action.task.dueDate,
 							status: action.task.status,
 							priority: action.task.priority,
-							owner: action.task.owner
+							owner: store.getState().loginReducer.login.email
 						})
 					.then( () => {
 						store.dispatch({ type: 'taskSubmitted', taskId: action.task.id }),
-						store.dispatchLater(500, action)
+						() => store.dispatch({ type: 'reportFailure' })
 					})
 				return Object.assign({}, state, { mode: 'submitting' });
 

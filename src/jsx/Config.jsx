@@ -3,6 +3,7 @@ export default {
 	maxId: 9999999999999999, // may not be bigger than maxBigInt and maxLong (for compatibility with other systems if we integrated with them)
 
 	apiBaseUrl: 'http://do.prokoho.cz/task-manager-api/v1',
+	// apiBaseUrl: 'http://doapi-2610.rostiapp.cz',
 	apiTaskListPath: '/tasks',
 	apiDateTimeFormat: 'YYYY-MM-DD',
 	

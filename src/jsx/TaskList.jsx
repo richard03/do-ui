@@ -81,7 +81,6 @@ class TaskList extends React.Component {
 
 const mapStateToProps = (state) => {
 	return {
-		user: state.loginReducer.user,
 		loading: state.taskListReducer.taskListLoading,
 		tasks: state.taskListReducer.tasks
 	}

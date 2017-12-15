@@ -61,8 +61,7 @@ class Task extends React.Component {
 			acceptanceCriteria: this.state.task.acceptanceCriteria,
 			dueDate: this.state.task.dueDate,
 			status: this.state.task.status,
-			priority: this.state.task.priority,
-			owner: this.props.user.email
+			priority: this.state.task.priority
 		}
 		this.props.submitTask(task)
 		if (this.props.mode == "create") {
@@ -124,6 +123,9 @@ class Task extends React.Component {
 						value={this.state.task.dueDate}
 						dateFormat={Config.taskDateFormat}
 						handleValueChange={this.handleDeadlineChange.bind(this)} />
+
+				<acceptanceCriteria
+						mode={this.mode()} />
 
 				<ui.textAreaField 
 						mode={this.mode()}
@@ -194,7 +196,6 @@ class Task extends React.Component {
 
 const mapStateToProps = (state) => {
 	return {
-		user: state.loginReducer.user,
 		mode: state.taskReducer.mode,
 		task: state.taskReducer.task
 	}

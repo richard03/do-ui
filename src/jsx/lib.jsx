@@ -20,16 +20,21 @@ function getQueryVariable(varName) {
 }
 
 
+
 /**
- * cfg = { url, login: { access_token } }
+ * cfg = { url, login: { token_type, access_token } }
  */
 function sendGetRequestToRestApi(cfg) {
 	return new Promise( function (resolve, reject) {
 		if (cfg.login && cfg.login.access_token) {
 			fetch(cfg.url, {
-					'Accept': 'application/json',
-					'Content-Type': 'application/json',
-					'Authorization': "Bearer " + cfg.login.access_token,
+					cache: "no-store",
+					headers: {
+						'Accept': 'application/json',
+						'Content-Type': 'application/json',
+						'Authorization': cfg.login.token_type + " " + cfg.login.access_token,
+						'Access-Control-Allow-Origin': '*'
+					}
 				})
 				.then(result=>result.json())
 				.then(data=>resolve(data));
@@ -40,7 +45,7 @@ function sendGetRequestToRestApi(cfg) {
 }
 
 /**
- * cfg = { url, login: { access_token } }
+ * cfg = { url, login: { token_type, access_token } }
  */
 function sendPostRequestToRestApi(cfg, dataObject) {
 	return new Promise(function (resolve, reject) {
@@ -52,11 +57,12 @@ function sendPostRequestToRestApi(cfg, dataObject) {
 				}
 			}
 			fetch(cfg.url, {
-						'Accept': 'application/json',
-						'Content-Type': 'application/json',
-						'Authorization': "Bearer " + cfg.login.access_token,
-						method: 'POST',
-						body: postBody
+					headers: {
+						'Authorization': cfg.login.token_type + " " + cfg.login.access_token,
+						'Access-Control-Allow-Origin': '*'
+					},
+					method: 'POST',
+					body: postBody
 				})
 				.then( responseData => resolve( responseData ) );
 		} else {
@@ -66,15 +72,16 @@ function sendPostRequestToRestApi(cfg, dataObject) {
 }
 
 /**
- * cfg = { url, login: { access_token } }
+ * cfg = { url, login: { token_type, access_token } }
  */
 function sendDeleteRequestToRestApi(cfg) {
 	return new Promise(function (resolve, reject) {
 		if (cfg.login && cfg.login.access_token) {
 			fetch(cfg.url, {
-					'Accept': 'application/json',
-					'Content-Type': 'application/json',
-					'Authorization': "Bearer " + cfg.login.access_token,
+					headers: {
+						'Authorization': cfg.login.token_type + " " + cfg.login.access_token,
+						'Access-Control-Allow-Origin': '*',
+					},
 					method: 'DELETE'
 				})
 				.then( responseData => resolve( responseData ) );
