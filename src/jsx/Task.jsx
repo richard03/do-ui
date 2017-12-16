@@ -124,7 +124,9 @@ class Task extends React.Component {
 						dateFormat={Config.taskDateFormat}
 						handleValueChange={this.handleDeadlineChange.bind(this)} />
 
-				<acceptanceCriteria
+				<ui.textList
+						label='TEST Akceptační kriteria' 
+						value={['A', 'B', 'C']}
 						mode={this.mode()} />
 
 				<ui.textAreaField 

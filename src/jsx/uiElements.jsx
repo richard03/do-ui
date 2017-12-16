@@ -10,6 +10,9 @@ export default {
 	selectField: selectField,
 	dateField: dateField,
 	textAreaField: textAreaField,
+
+	textList: textList,
+
 	submitButton: submitButton,
 	button: button,
 
@@ -64,14 +67,14 @@ function textField(props) {
 		case 'edit':
 			return (
 				<div className={className}>
-					<label className="do--data-field__label">{props.label}</label>
+					<FieldLabel text={props.label} mode={props.mode} />
 					<input type="text" name={props.name} value={props.value} onChange={props.handleValueChange} className="do--data-field__control do--data-field__control--wide"/>
 				</div>
 			)
 		default: // view mode
 			return (
 				<div className={className}>
-					<h3 className="do--data-field__label">{props.label}</h3>
+					<FieldLabel text={props.label} mode={props.mode} />
 					{props.value}
 					<input type="hidden" name={props.name} value={props.value}/>
 				</div>
@@ -92,7 +95,7 @@ function dateField(props) {
 		case 'edit':
 			return (
 				<div className="do--data-field">
-					<label className="do--data-field__label">{props.label}</label>
+					<FieldLabel text={props.label} mode={props.mode} />
 					<DatePicker
 						selected={Moment(props.value)}
 						onChange={props.handleValueChange}
@@ -104,7 +107,7 @@ function dateField(props) {
 		default: // in view mode
 			return (
 				<div className={className}>
-					<h3 className="do--data-field__label">{props.label}</h3>
+					<FieldLabel text={props.label} mode={props.mode} />
 					{Moment(props.value).format(props.dateFormat)}
 				</div>
 			)
@@ -140,7 +143,7 @@ function selectField(props) {
 		case 'edit':
 			return (
 				<div className={className}>
-					<label className="do--data-field__label">{props.label}</label>
+					<FieldLabel text={props.label} mode={props.mode} />
 					<select name={props.name} value={props.value} onChange={props.handleValueChange} className="do--data-field__control">
 						{props.options.map(function (option) {
 							return <option key={props.name + option.value} value={option.value}>{option.label}</option>;
@@ -151,7 +154,7 @@ function selectField(props) {
 		default: // view mode
 			return (
 				<div className={className}>
-					<h3 className="do--data-field__label">{props.label}</h3>
+					<FieldLabel text={props.label} mode={props.mode} />
 					{selectView(props)}
 					<input type="hidden" name={props.name} value={props.value}/>
 				</div>
@@ -172,14 +175,14 @@ function textAreaField(props) {
 		case 'edit':
 			return (
 				<div className={className}>
-					<label className="do--data-field__label">{props.label}</label>
+					<FieldLabel text={props.label} mode={props.mode} />
 					<textarea name={props.name} value={props.value} onChange={props.handleValueChange} className="do--data-field__control do--data-field__control--wide"></textarea>
 				</div>
 			)
 		default: // in view mode
 			return (
 				<div className={className}>
-					<h3 className="do--data-field__label">{props.label}</h3>
+					<FieldLabel text={props.label} mode={props.mode} />
 					{props.value.split('\n').map( (item, i) =>  
 						<p key={props.name + '-line-' + i}>{item}</p>
 					)}
@@ -188,6 +191,49 @@ function textAreaField(props) {
 			)
 	}
 }
+
+
+
+
+
+/**
+ * TEXTLIST
+ * List of texts
+ */
+function textList(props) {
+	let className = 'do--data-field ' + props.className;
+	let itemClassName = '';
+	switch (props.mode) {
+		case 'create':
+		case 'edit':
+			return (
+				<div className={className}>
+					<FieldLabel text={props.label} mode={props.mode} />
+					{props.value.map( function (item, i) {
+						return (
+							<div className={itemClassName} key={'textListItem-' + i}>
+								<textarea className="do--data-field__control do--data-field__control--wide"></textarea>
+							</div>
+						)
+					} )}
+				</div>
+			)
+		default: // in view mode
+			return (
+				<div className={className}>
+					<FieldLabel text={props.label} mode={props.mode} />
+					{props.value.map( function (item, i) {
+						return (
+							<div className={itemClassName} key={'textListItem-' + i}>
+								<label><input type="checkbox" /> {item}</label>
+							</div>
+						)
+					} )}
+				</div>
+			)
+	}
+}
+
 
 
 
@@ -211,4 +257,26 @@ function button(props) {
 	return (
 		<button {...props} type='button' className={className}>{props.label}</button>
 	)
+}
+
+
+
+
+
+function FieldLabel(props) {
+	// if (props.text && (props.text !== '') ) {
+	// 	return ''
+	// } else {
+		switch (props.mode) {
+			case 'create':
+			case 'edit':
+				return (
+					<label className="do--data-field__label">{props.text}</label>
+				)
+			default: // in view mode
+	 			return (
+					<h3 className="do--data-field__label">{props.text}</h3>
+				)
+		}
+	// }
 }
