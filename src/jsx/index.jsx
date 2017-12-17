@@ -22,7 +22,7 @@ gapi.load('auth2', function () {
 	gapi.auth2.init({
 		client_id: Config.gApiKey
 	}).then(onAuthSuccess, onAuthFailure);
-});	
+});
 
 
 function onAuthSuccess(auth) {
@@ -137,18 +137,19 @@ function init(auth, login) {
 			case 'setTaskFormMode':
 				return Object.assign({}, state, { mode: action.newMode })
 
-			case 'fetchTask': 
+			case 'fetchTask':
 				if (taskId && (taskId > 0)) {
 					// task exists (or at least taskId looks good)
 					sendGetRequestToRestApi({
 							url: Config.apiBaseUrl + Config.apiTaskListPath + '/' + taskId + '/',
 							login: store.getState().loginReducer.login })
 						.then( taskData => store.dispatch({
-								type: 'updateTask', 
+								type: 'updateTask',
 								task: {
 									id: taskData['id'],
 									title: taskData['title'],
 									acceptanceCriteria: taskData['acceptance_criteria'],
+									criteria: [], // TODO: read criteria from database
 									dueDate: taskData['due_date'],
 									status: taskData['status'],
 									priority: taskData['priority'],
@@ -167,13 +168,14 @@ function init(auth, login) {
 					id: Math.floor(Math.random() * Config.maxId),
 					status: 'open',
 					title: '',
-					dueDate: Moment().format(Config.apiDateTimeFormat), 
+					dueDate: Moment().format(Config.apiDateTimeFormat),
 					acceptanceCriteria: '',
+					criteria: [ { checked: false, description: "" } ],
 					priority: 1,
 					owner: store.getState().loginReducer.login.email
 				}
 				return Object.assign({}, state, { task: newTask, mode: 'create' })
-					
+
 
 			case 'updateTask':
 				return Object.assign({}, state, { task: action.task, mode: 'view' });
@@ -182,8 +184,8 @@ function init(auth, login) {
 				sendPostRequestToRestApi({
 							url: Config.apiBaseUrl + Config.apiTaskListPath + '/' + taskId + '/',
 							login: store.getState().loginReducer.login
-						}, { 
-							status: 'done' 
+						}, {
+							status: 'done'
 						})
 					.then(
 						() => store.dispatch({ type: 'loadTaskList' }),
@@ -193,7 +195,7 @@ function init(auth, login) {
 
 			case 'deleteTask':
 				sendDeleteRequestToRestApi({
-							url: Config.apiBaseUrl + Config.apiTaskListPath + '/' + taskId + '/', 
+							url: Config.apiBaseUrl + Config.apiTaskListPath + '/' + taskId + '/',
 							login: store.getState().loginReducer.login
 						})
 					.then( () => {
@@ -202,7 +204,7 @@ function init(auth, login) {
 					});
 				return Object.assign({}, state, { mode: 'deleted' });
 
-			case 'submitTask': 
+			case 'submitTask':
 				sendPostRequestToRestApi({
 							url: Config.apiBaseUrl + Config.apiTaskListPath + '/' + action.task.id + '/',
 							login: store.getState().loginReducer.login
@@ -229,7 +231,7 @@ function init(auth, login) {
 
 			default:
 				return state
-		}	
+		}
 	}
 
 	ReactDOM.render(

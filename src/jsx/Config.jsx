@@ -6,7 +6,7 @@ export default {
 	// apiBaseUrl: 'http://doapi-2610.rostiapp.cz',
 	apiTaskListPath: '/tasks',
 	apiDateTimeFormat: 'YYYY-MM-DD',
-	
+
 	taskListScreenPath: '/tasks/',
 	taskFormScreenPath: '/taskForm/',
 	taskDetailScreenPath: '/task/',
@@ -15,18 +15,23 @@ export default {
 	gApiKey: '752355908856-6ltij7jk35g0jn1l1fesnv6ung3rbtlo.apps.googleusercontent.com',
 
 	messages: {
+		// status messages
 		loadingData: 'Načítám data...',
+		loadingTaskList: 'Načítám úkoly...',
+		emptyTaskList: 'Nemáte žádné úkoly',
+
+		// buttons
 		resolved: 'Splněno',
 		delete:'Smazat',
 		back: 'Zpět',
-
-		task: 'Úkol',
-		tasks: 'Úkoly',
-		loadingTaskList: 'Načítám úkoly...',
-		emptyTaskList: 'Nemáte žádné úkoly',
+		addNext: 'Přidat další',
 		addTask: 'Přidat úkol',
 		createTask: 'Vytvořit úkol',
 		saveChanges: 'Uložit změny',
+
+		// titles
+		task: 'Úkol',
+		tasks: 'Úkoly',
 
 		priority: {
 			critical: 'Kritická',
@@ -35,5 +40,5 @@ export default {
 			low: 'Nízká'
 		}
 	}
-	
+
 }

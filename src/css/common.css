@@ -20,7 +20,6 @@ button {
 }
 textarea {
 	display: block;
-	min-height: 10em;
 }
 p {
 	margin: 0;
@@ -32,6 +31,10 @@ h1,
 h2,
 h3 {
 	margin-bottom: 0.3em;
+}
+button,
+a[href] {
+	cursor: pointer;
 }
 
 
@@ -97,14 +100,21 @@ textarea.do--data-field__control {
 
 
 
+.do--margin-small--top {
+	margin-top: 6px !important;
+}
+
+
+
+
 .do--margin-medium--top {
 	margin-top: 12px !important;
 }
 .do--margin-medium--left {
-	margin-left: 12px !important;	
+	margin-left: 12px !important;
 }
 .do--margin-medium--right {
-	margin-right: 12px !important;	
+	margin-right: 12px !important;
 }
 
 
@@ -113,10 +123,10 @@ textarea.do--data-field__control {
 
 
 .do--margin-wide--top {
-	margin-top: 24px !important;	
+	margin-top: 24px !important;
 }
 .do--margin-wide--left {
-	margin-left: 24px !important;	
+	margin-left: 24px !important;
 }
 
 
@@ -124,10 +134,10 @@ textarea.do--data-field__control {
 
 
 .do--margin-extra--top {
-	margin-top: 36px !important;	
+	margin-top: 36px !important;
 }
 .do--margin-extra--left {
-	margin-left: 36px !important;	
+	margin-left: 36px !important;
 }
 
 
@@ -191,4 +201,18 @@ textarea.do--data-field__control {
 }
 .do-list__item--critical-priority {
 	border-left-color: #f00;
+}
+
+
+
+
+.do--todo-list__item {
+	position: relative;
+	padding-right: 42px;
+}
+.do--todo-list__delete-button {
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: 6px 12px;
 }

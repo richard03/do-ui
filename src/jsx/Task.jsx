@@ -16,8 +16,8 @@ class Task extends React.Component {
 		super(props)
 
 		this.state = {
-			task : this.props.task
-		};
+			task: this.props.task
+		}
 	}
 	componentWillReceiveProps(nextProps) {
 		this.setState({ task: nextProps.task })
@@ -50,7 +50,36 @@ class Task extends React.Component {
 		task.dueDate = date.format(Config.apiDateTimeFormat)
 		this.setState({ task })
 	}
-
+	handleListItemCheck(evt) {
+		let task = this.state.task
+		const field = evt.target
+		const listItem = evt.target.parentNode
+		const index = parseInt(listItem.dataset.index, 10)
+		task[field.name][index].checked = evt.target.isChecked
+		this.setState({ task })
+	}
+	handleListItemChange(evt) {
+		let task = this.state.task
+		const field = evt.target
+		const listItem = evt.target.parentNode
+		const index = parseInt(listItem.dataset.index, 10)
+		task[field.name][index].description = evt.target.value
+		this.setState({ task })
+	}
+	handleListItemAdd(evt) {
+		let task = this.state.task
+		const name = evt.target.parentNode.dataset.name
+		task[name].push( { checked: false, description: '' })
+		this.setState({ task })
+	}
+	handleListItemDelete(evt) {
+		let task = this.state.task
+		const listItem = evt.target.parentNode
+		const name = listItem.parentNode.dataset.name
+		const index = parseInt(listItem.dataset.index, 10)
+		task[name].splice(index, 1)
+		this.setState({ task })
+	}
 	handleFormSubmit(evt) {
 		evt.preventDefault()
 
@@ -88,20 +117,20 @@ class Task extends React.Component {
 			<div onClick={this.handleFormFieldsClick.bind(this)}>
 				<input type="hidden" name="id" value={this.state.task.id} />
 				<input type="hidden" name="status" value={this.state.task.status} />
-			
-			
-				<ui.textField 
+
+
+				<ui.textField
 						mode={this.mode()}
-						label='Název' 
-						name='title' 
+						label='Název'
+						name='title'
 						value={this.state.task.title}
 						handleValueChange={this.handleFieldChange.bind(this)}
 						className='do--margin-medium--top' />
 
-				<ui.selectField 
+				<ui.selectField
 						mode={this.mode()}
 						label='Priorita'
-						name='priority' 
+						name='priority'
 						value={this.state.task.priority}
 						handleValueChange={this.handleFieldChange.bind(this)}
 						className='do--margin-medium--top'
@@ -117,22 +146,29 @@ class Task extends React.Component {
 					<option value="0">{Config.messages.priority.low}</option>
 				</ui.selectField>
 
-				<ui.dateField 
+				<ui.dateField
 						mode={this.mode()}
-						label='Termín' 
+						label='Termín'
 						value={this.state.task.dueDate}
 						dateFormat={Config.taskDateFormat}
 						handleValueChange={this.handleDeadlineChange.bind(this)} />
 
-				<ui.textList
-						label='TEST Akceptační kriteria' 
-						value={['A', 'B', 'C']}
-						mode={this.mode()} />
-
-				<ui.textAreaField 
+					<ui.todoList
 						mode={this.mode()}
-						label='Akceptační kriteria' 
-						name='acceptanceCriteria' 
+						label='TEST Akceptační kriteria'
+						name='criteria'
+						value={this.state.task.criteria}
+						itemClassName="do--margin-small--top"
+						addButtonClassName="do--margin-small--top"
+						itemCheckHandler={this.handleListItemCheck.bind(this)}
+						itemChangeHandler={this.handleListItemChange.bind(this)}
+						itemAddHandler={this.handleListItemAdd.bind(this)}
+						itemDeleteHandler={this.handleListItemDelete.bind(this)} />
+
+				<ui.textAreaField
+						mode={this.mode()}
+						label='Akceptační kriteria'
+						name='acceptanceCriteria'
 						value={this.state.task.acceptanceCriteria}
 						handleValueChange={this.handleFieldChange.bind(this)} />
 			</div>
@@ -144,11 +180,11 @@ class Task extends React.Component {
 			<div className="do--margin-extra--top do--float">
 				<ui.show if={this.mode() == 'edit'}>
 					<ui.submitButton label={Config.messages.saveChanges} className="do--margin-medium--right" />
-					<ui.button label={Config.messages.back} className="do--margin-medium--right" onClick={this.mode.bind(this, 'view')} />			
+					<ui.button label={Config.messages.back} className="do--margin-medium--right" onClick={this.mode.bind(this, 'view')} />
 				</ui.show>
 				<ui.show if={this.mode() == 'create'}>
 					<ui.submitButton label={Config.messages.createTask} className="do--margin-medium--right" />
-					<Link to={Config.taskListScreenPath} className="do--button do--margin-medium--right">{Config.messages.back}</Link>		
+					<Link to={Config.taskListScreenPath} className="do--button do--margin-medium--right">{Config.messages.back}</Link>
 				</ui.show>
 				<ui.hide if={ (this.mode() == 'edit') || (this.mode() == 'create') }>
 					<ui.submitButton label={Config.messages.resolved} className="do--margin-medium--right" onClick={this.handleResolveTask.bind(this)} />
