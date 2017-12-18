@@ -22,12 +22,16 @@ export default {
 
 		// buttons
 		resolved: 'Splněno',
+		accept: 'Přijmout',
 		delete:'Smazat',
 		back: 'Zpět',
+		cancel: 'Zrušit',
 		addNext: 'Přidat další',
 		addTask: 'Přidat úkol',
 		createTask: 'Vytvořit úkol',
 		saveChanges: 'Uložit změny',
+		switchToViewMode: 'Hotovo',
+		switchToEditMode: 'Upravit',
 
 		// titles
 		task: 'Úkol',

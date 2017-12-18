@@ -74,7 +74,7 @@ function init(auth, login) {
 				status: 'new',
 				title: '',
 				dueDate: Moment().format(Config.apiDateTimeFormat),
-				acceptanceCriteria: '',
+				acceptanceCriteria: [],
 				priority: 1,
 				owner: '',
 			}
@@ -148,8 +148,7 @@ function init(auth, login) {
 								task: {
 									id: taskData['id'],
 									title: taskData['title'],
-									acceptanceCriteria: taskData['acceptance_criteria'],
-									criteria: [], // TODO: read criteria from database
+									acceptanceCriteria: JSON.parse(taskData['acceptance_criteria']),
 									dueDate: taskData['due_date'],
 									status: taskData['status'],
 									priority: taskData['priority'],
@@ -169,8 +168,7 @@ function init(auth, login) {
 					status: 'open',
 					title: '',
 					dueDate: Moment().format(Config.apiDateTimeFormat),
-					acceptanceCriteria: '',
-					criteria: [ { checked: false, description: "" } ],
+					acceptanceCriteria: [ { checked: false, description: "" } ],
 					priority: 1,
 					owner: store.getState().loginReducer.login.email
 				}
@@ -211,7 +209,7 @@ function init(auth, login) {
 						}, {
 							id: action.task.id,
 							title: action.task.title,
-							acceptance_criteria: action.task.acceptanceCriteria,
+							acceptance_criteria: JSON.stringify(action.task.acceptanceCriteria),
 							due_date: action.task.dueDate,
 							status: action.task.status,
 							priority: action.task.priority,

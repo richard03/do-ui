@@ -8,6 +8,7 @@ import ui from './uiElements.jsx'
 import { getQueryVariable } from './lib.jsx'
 
 import Header from './Header.jsx'
+import CriteriaList from './CriteriaList.jsx'
 
 
 
@@ -48,36 +49,6 @@ class Task extends React.Component {
 	handleDeadlineChange(date) {
 		let task = this.state.task
 		task.dueDate = date.format(Config.apiDateTimeFormat)
-		this.setState({ task })
-	}
-	handleListItemCheck(evt) {
-		let task = this.state.task
-		const field = evt.target
-		const listItem = evt.target.parentNode
-		const index = parseInt(listItem.dataset.index, 10)
-		task[field.name][index].checked = evt.target.isChecked
-		this.setState({ task })
-	}
-	handleListItemChange(evt) {
-		let task = this.state.task
-		const field = evt.target
-		const listItem = evt.target.parentNode
-		const index = parseInt(listItem.dataset.index, 10)
-		task[field.name][index].description = evt.target.value
-		this.setState({ task })
-	}
-	handleListItemAdd(evt) {
-		let task = this.state.task
-		const name = evt.target.parentNode.dataset.name
-		task[name].push( { checked: false, description: '' })
-		this.setState({ task })
-	}
-	handleListItemDelete(evt) {
-		let task = this.state.task
-		const listItem = evt.target.parentNode
-		const name = listItem.parentNode.dataset.name
-		const index = parseInt(listItem.dataset.index, 10)
-		task[name].splice(index, 1)
 		this.setState({ task })
 	}
 	handleFormSubmit(evt) {
@@ -153,19 +124,7 @@ class Task extends React.Component {
 						dateFormat={Config.taskDateFormat}
 						handleValueChange={this.handleDeadlineChange.bind(this)} />
 
-					<ui.todoList
-						mode={this.mode()}
-						label='TEST Akceptační kriteria'
-						name='criteria'
-						value={this.state.task.criteria}
-						itemClassName="do--margin-small--top"
-						addButtonClassName="do--margin-small--top"
-						itemCheckHandler={this.handleListItemCheck.bind(this)}
-						itemChangeHandler={this.handleListItemChange.bind(this)}
-						itemAddHandler={this.handleListItemAdd.bind(this)}
-						itemDeleteHandler={this.handleListItemDelete.bind(this)} />
-
-				<ui.textAreaField
+				<CriteriaList
 						mode={this.mode()}
 						label='Akceptační kriteria'
 						name='acceptanceCriteria'

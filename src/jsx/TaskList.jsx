@@ -70,7 +70,9 @@ class TaskList extends React.Component {
 			return (
 				<div className="do--box">
 					<Header title={Config.messages.tasks} />
-					<Link to={Config.taskDetailScreenPath} className="do--button do--margin-medium--top">{Config.messages.addTask}</Link>
+					<div>
+						<Link to={Config.taskDetailScreenPath} className="do--button do--margin-medium--top">{Config.messages.addTask}</Link>
+					</div>
 					{this.getTaskListHtml()}
 				</div>
 			)

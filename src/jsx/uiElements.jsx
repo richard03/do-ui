@@ -18,7 +18,9 @@ export default {
 	button: Button,
 
 	hide: Hide,
-	show: Show
+	show: Show,
+
+	fieldLabel: FieldLabel
 }
 
 
@@ -55,6 +57,20 @@ function Hide(props) {
 	return null;
 }
 
+
+function FieldLabel(props) {
+	switch (props.mode) {
+		case 'create':
+		case 'edit':
+			return (
+				<label className="do--data-field__label">{props.text}</label>
+			)
+		default: // in view mode
+			return (
+				<h3 className="do--data-field__label">{props.text}</h3>
+			)
+	}
+}
 
 
 /**

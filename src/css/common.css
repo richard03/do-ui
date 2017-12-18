@@ -41,63 +41,17 @@ a[href] {
 
 
 /**
- * COMPONENTS
+ * DEBUG
  */
-.do--box {
-	margin: 12px;
-	padding: 24px;
-	box-shadow: 1px 1px 5px #ccc;
-	background: #fff;
+#app {
+	width: 320px;
 }
 
 
 
-
-
-.do--data-field {
-	margin: 3px;
-	padding: 6px;
-	margin-left: -6px;
-	margin-right: -6px;
-	box-shadow: 1px 1px 5px #ccc;
-}
-.do--data-field__label {
-	display: block;
-	font-weight: bold;
-	margin: 0 0 0.3em 0;
-	padding: 0;
-}
-input.do--data-field__control,
-textarea.do--data-field__control {
-	padding: 6px;
-}
-.do--data-field__control--wide {
-	width: 100%;
-	box-sizing: border-box;
-}
-
-
-
-.do--title {
-	margin: 0 0 0.3em 0;
-	padding: 0;
-}
-
-
-
-
-.do--button {
-	display: inline-block;
-	padding: 12px;
-	border: none;
-	border-radius: 2px;
-	box-shadow: 1px 1px 5px #ccc;
-	background: #eee;
-	color: #000;
-	text-decoration: none;
-}
-
-
+/**
+ * OVERRIDES
+ */
 
 
 .do--margin-small--top {
@@ -159,6 +113,88 @@ textarea.do--data-field__control {
 
 
 
+/**
+ * COMPONENTS
+ */
+.do--box {
+	margin: 12px;
+	padding: 24px;
+	box-shadow: 1px 1px 5px #ccc;
+	background: #fff;
+}
+
+
+
+
+
+.do--data-field {
+	margin: 3px;
+	padding: 6px;
+	margin-left: -6px;
+	margin-right: -6px;
+	box-shadow: 1px 1px 5px #ccc;
+	position: relative;
+}
+.do--data-field__label {
+	display: block;
+	font-weight: bold;
+	margin: 0 0 0.3em 0;
+	padding: 0;
+}
+input.do--data-field__control,
+textarea.do--data-field__control {
+	padding: 6px;
+}
+.do--data-field__control--wide {
+	width: 100%;
+	box-sizing: border-box;
+}
+.do--data-field__buttons {
+	margin-top: 6px;
+}
+.do--data-field__edit-button {
+	position: absolute;
+	top: 0;
+	right: 0;
+}
+
+
+
+
+
+
+.do--title {
+	margin: 0 0 0.3em 0;
+	padding: 0;
+}
+
+
+
+
+.do--button {
+	display: inline-block;
+	padding: 12px;
+	border: none;
+	border-radius: 2px;
+	box-shadow: 1px 1px 5px #ccc;
+	background: #eee;
+	color: #000;
+	text-decoration: none;
+
+	margin-left: 24px;
+}
+.do--button:first-child {
+	margin-left: 0;
+}
+.do--button--small {
+	padding: 6px;
+}
+
+
+
+
+
+
 .do--list {
 	margin: 0;
 	padding: 0;
@@ -206,13 +242,25 @@ textarea.do--data-field__control {
 
 
 
-.do--todo-list__item {
+
+
+.do--criteria-list,
+.do--criteria-list__item {
 	position: relative;
-	padding-right: 42px;
 }
-.do--todo-list__delete-button {
+.do--criteria-list__delete-button,
+.do--criteria-list__edit-button {
 	position: absolute;
 	top: 0;
 	right: 0;
-	padding: 6px 12px;
+}
+.do--criteria-list__item {
+	padding-right: 42px;
+}
+.do--criteria-list__item,
+.do--criteria-list__add-button {
+	margin-top: 6px;
+}
+.do--criteria-list__view-button {
+	margin-left: 24px;
 }
