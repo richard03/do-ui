@@ -40,7 +40,6 @@ function onAuthSuccess(auth) {
 				email: googleUserProfile.getEmail()
 			});
 		init(auth, login);
-//			store.dispatch({ type: 'setUserData', login, loginStatus: 'ok'})
 	} else {
 		auth.signIn({ ux_mode: 'redirect' });
 		// leaving application for now, Google login screen is going to be displayed
@@ -88,9 +87,8 @@ function init(auth, login) {
 			taskReducer
 		}),
 		initialState,
-		window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+		window.__REDUX_DEVTOOLS_EXTENSION__ ? window.__REDUX_DEVTOOLS_EXTENSION__() : f => f
 	)
-
 
 	function loginReducer(state = initialState, action) {
 		return state

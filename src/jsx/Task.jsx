@@ -8,6 +8,7 @@ import ui from './uiElements.jsx'
 import { getQueryVariable } from './lib.jsx'
 
 import Header from './Header.jsx'
+import Field from './Field.jsx'
 import CriteriaList from './CriteriaList.jsx'
 
 
@@ -41,14 +42,9 @@ class Task extends React.Component {
 		this.props.history.push(Config.taskListScreenPath)
 	}
 
-	handleFieldChange(evt) {
+	handleFieldChange(evt, name, value) {
 		let task = this.state.task
-		task[evt.target.name] = evt.target.value
-		this.setState({ task })
-	}
-	handleDeadlineChange(date) {
-		let task = this.state.task
-		task.dueDate = date.format(Config.apiDateTimeFormat)
+		task[name] = value
 		this.setState({ task })
 	}
 	handleFormSubmit(evt) {
@@ -77,20 +73,13 @@ class Task extends React.Component {
 		this.redirectToTaskList()
 	}
 
-	handleFormFieldsClick() {
-		if ( (this.mode() !== 'edit') && (this.mode() !== 'create') ) {
-			this.mode('edit')
-		}
-	}
-
 	renderFormFields() {
 		return (
-			<div onClick={this.handleFormFieldsClick.bind(this)}>
+			<div>
 				<input type="hidden" name="id" value={this.state.task.id} />
 				<input type="hidden" name="status" value={this.state.task.status} />
 
-
-				<ui.textField
+				<Field type='text'
 						mode={this.mode()}
 						label='Název'
 						name='title'
@@ -98,38 +87,26 @@ class Task extends React.Component {
 						handleValueChange={this.handleFieldChange.bind(this)}
 						className='do--margin-medium--top' />
 
-				<ui.selectField
+				<Field type='date'
+						mode={this.mode()}
+						label='Termín'
+						name='dueDate'
+						value={this.state.task.dueDate}
+						dateFormat={Config.taskDateFormat}
+						handleValueChange={this.handleFieldChange.bind(this)} />
+
+				<Field type='select'
 						mode={this.mode()}
 						label='Priorita'
 						name='priority'
 						value={this.state.task.priority}
-						handleValueChange={this.handleFieldChange.bind(this)}
-						className='do--margin-medium--top'
-						options={[
-							{value: 3, label: Config.messages.priority.critical},
-							{value: 2, label: Config.messages.priority.high},
-							{value: 1, label: Config.messages.priority.normal},
-							{value: 0, label: Config.messages.priority.low}
-						]}>
+						handleValueChange={this.handleFieldChange.bind(this)}>
 					<option value="3">{Config.messages.priority.critical}</option>
 					<option value="2">{Config.messages.priority.high}</option>
 					<option value="1">{Config.messages.priority.normal}</option>
 					<option value="0">{Config.messages.priority.low}</option>
-				</ui.selectField>
+				</Field>
 
-				<ui.dateField
-						mode={this.mode()}
-						label='Termín'
-						value={this.state.task.dueDate}
-						dateFormat={Config.taskDateFormat}
-						handleValueChange={this.handleDeadlineChange.bind(this)} />
-
-				<CriteriaList
-						mode={this.mode()}
-						label='Akceptační kriteria'
-						name='acceptanceCriteria'
-						value={this.state.task.acceptanceCriteria}
-						handleValueChange={this.handleFieldChange.bind(this)} />
 			</div>
 		);
 	}
@@ -137,19 +114,19 @@ class Task extends React.Component {
 	renderFormButtons() {
 		return (
 			<div className="do--margin-extra--top do--float">
-				<ui.show if={this.mode() == 'edit'}>
-					<ui.submitButton label={Config.messages.saveChanges} className="do--margin-medium--right" />
-					<ui.button label={Config.messages.back} className="do--margin-medium--right" onClick={this.mode.bind(this, 'view')} />
-				</ui.show>
-				<ui.show if={this.mode() == 'create'}>
-					<ui.submitButton label={Config.messages.createTask} className="do--margin-medium--right" />
+				<ui.Show if={this.mode() == 'edit'}>
+					<ui.SubmitButton label={Config.messages.saveChanges} className="do--margin-medium--right" />
+					<ui.Button label={Config.messages.back} className="do--margin-medium--right" onClick={this.mode.bind(this, 'view')} />
+				</ui.Show>
+				<ui.Show if={this.mode() == 'create'}>
+					<ui.SubmitButton label={Config.messages.createTask} className="do--margin-medium--right" />
 					<Link to={Config.taskListScreenPath} className="do--button do--margin-medium--right">{Config.messages.back}</Link>
-				</ui.show>
-				<ui.hide if={ (this.mode() == 'edit') || (this.mode() == 'create') }>
-					<ui.submitButton label={Config.messages.resolved} className="do--margin-medium--right" onClick={this.handleResolveTask.bind(this)} />
+				</ui.Show>
+				<ui.Hide if={ (this.mode() == 'edit') || (this.mode() == 'create') }>
+					<ui.SubmitButton label={Config.messages.resolved} className="do--margin-medium--right" onClick={this.handleResolveTask.bind(this)} />
 					<Link to={Config.taskListScreenPath} className="do--button do--margin-medium--right">{Config.messages.back}</Link>
-					<ui.button label={Config.messages.delete} className="do--float__right" onClick={this.handleDeleteTask.bind(this)} />
-				</ui.hide>
+					<ui.Button label={Config.messages.delete} className="do--float__right" onClick={this.handleDeleteTask.bind(this)} />
+				</ui.Hide>
 			</div>
 		);
 	}

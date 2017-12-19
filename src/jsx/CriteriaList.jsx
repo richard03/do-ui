@@ -88,8 +88,10 @@ class CriteriaList extends React.Component {
 		 						</div>
 		 					)
 						} )}
-						<ui.button label={Config.messages.addNext} className="do--criteria-list__add-button do--button--small" onClick={component.handleItemAdd.bind(component)} />
-						<ui.button label={Config.messages.switchToViewMode} className="do--criteria-list__view-button do--button--small" onClick={component.switchToViewMode.bind(component)} />
+						<div className="do--data-field__buttons">
+							<ui.button label={Config.messages.addNext} className="do--criteria-list__add-button do--button--small" onClick={component.handleItemAdd.bind(component)} />
+							<ui.button label={Config.messages.switchToViewMode} className="do--criteria-list__view-button do--button--small" onClick={component.switchToViewMode.bind(component)} />
+						</div>
 					</div>
 		 		)
 		 	default: // in view mode

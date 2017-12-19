@@ -44,7 +44,8 @@ a[href] {
  * DEBUG
  */
 #app {
-	width: 320px;
+	min-width: 320px;
+	max-width: 1000px;
 }
 
 
@@ -145,6 +146,9 @@ input.do--data-field__control,
 textarea.do--data-field__control {
 	padding: 6px;
 }
+select.do--data-field__control {
+	padding: 5px;
+}
 .do--data-field__control--wide {
 	width: 100%;
 	box-sizing: border-box;
@@ -154,11 +158,14 @@ textarea.do--data-field__control {
 }
 .do--data-field__edit-button {
 	position: absolute;
-	top: 0;
-	right: 0;
+	top: 6px;
+	right: 6px;
 }
-
-
+.do--data-field__control-buttons,
+.do--data-field__control-buttons .do--data-field__accept-button,
+.do--data-field__control-buttons .do--data-field__reject-button {
+	margin-left: 6px;
+}
 
 
 
@@ -181,13 +188,13 @@ textarea.do--data-field__control {
 	color: #000;
 	text-decoration: none;
 
-	margin-left: 24px;
+	margin-left: 12px;
 }
 .do--button:first-child {
 	margin-left: 0;
 }
 .do--button--small {
-	padding: 6px;
+	padding: 6px 12px;
 }
 
 
@@ -257,8 +264,7 @@ textarea.do--data-field__control {
 .do--criteria-list__item {
 	padding-right: 42px;
 }
-.do--criteria-list__item,
-.do--criteria-list__add-button {
+.do--criteria-list__item {
 	margin-top: 6px;
 }
 .do--criteria-list__view-button {

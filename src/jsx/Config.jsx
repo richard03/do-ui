@@ -10,7 +10,8 @@ export default {
 	taskListScreenPath: '/tasks/',
 	taskFormScreenPath: '/taskForm/',
 	taskDetailScreenPath: '/task/',
-	taskDateFormat: 'D. M. YYYY',
+	
+	viewDateFormat: 'D. M. YYYY',
 
 	gApiKey: '752355908856-6ltij7jk35g0jn1l1fesnv6ung3rbtlo.apps.googleusercontent.com',
 
