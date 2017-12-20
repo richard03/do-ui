@@ -17,8 +17,6 @@ export default {
 	Select: Select,
 	SelectView: SelectView,
 
-	TextAreaField: TextAreaField,
-
 	SubmitButton: SubmitButton,
 	Button: Button,
 
@@ -82,81 +80,152 @@ function FieldLabel(props) {
 }
 
 /**
- * <TextInput name value handleValueChange className>
+ * <TextInput name value className handleValueChange>
  */
-function TextInput(props) {
-	let className = 'do--ui-text-input ' + props.className
-	return (
-		<input type="text" name={props.name} value={props.value} onChange={props.handleValueChange} className={className} />
-	)
+class TextInput extends React.Component {
+
+	constructor(props) {
+	super(props)
+	this.state = {
+			value: props.value
+		}
+	}
+
+	handleValueChange(evt) {
+		this.setState({ value: evt.target.value })
+		if (props.handleValueChange) {
+			props.handleValueChange(evt, evt.target.value)
+		}
+	}
+
+	render() {
+		let className = 'do--ui-text-input ' + this.props.className
+		return (
+			<Textarea
+				minRows={1}
+				name={this.props.name}
+				value={this.props.value}
+				className={className}
+
+				onChange={this.handleValueChange.bind(this)} />
+		)
+	}
 }
 
+
 /**
- * <TextView text name value className>
+ * <TextView value className>
  */
 function TextView(props) {
+	const className = 'do--ui-text-view ' + this.props.className
 	return (
-		<span className={props.className}>
-			{props.value}
-			<input type="hidden" name={props.name} value={props.value} />
-		</span>
+		<span className={className}>{props.value}</span>
 	)
 }
 
 
 
 /**
- * <DatePicker value dateFormat className handleValueChange handleClickOutside />
+ * <DateInput name value dateFormat className handleValueChange handleClickOutside />
  */
-function DateInput(props) {
-	let className = 'do--ui-date-picker ' + props.className
-	return (
-		<DatePicker
-			selected={Moment(props.value)}
-			onChange={props.handleValueChange}
-			onClickOutside={props.handleClickOutside}
-			dateFormat={props.dateFormat}
-			className={className} />
-	)
+ class DateInput extends React.Component {
+
+	constructor(props) {
+		super(props)
+		this.state = {
+			value: props.value
+		}
+	}
+
+	handleValueChange(date) {
+		const value = date.format('YYYY-MM-DD')
+		this.setState({ value })
+		if (props.handleValueChange) {
+			const fakeEvent = {
+				target: {
+					name: props.name,
+					value: value
+				}
+			}
+			props.handleValueChange(fakeEvent, value)
+		}
+	}
+
+	render() {
+		let className = 'do--ui-date-input ' + props.className
+		return (
+			<DatePicker
+				selected={Moment(this.state.value)}
+				dateFormat={props.dateFormat}
+				className={className}
+
+				onChange={this.handleValueChange.bind(this)}
+				onClickOutside={props.handleClickOutside} />
+		)
+	}
 }
 
 /**
- * <TextView text name value dateFormat className>
+ * <DateView value dateFormat className>
  */
 function DateView(props) {
+	const className = 'do--ui-date-view ' + props.className
 	return (
-		<span className={props.className}>
-			{Moment(props.value).format(props.dateFormat)}
-			<input type="hidden" name={props.name} value={props.value} />
-		</span>
+		<span className={props.className}>{Moment(props.value).format(props.dateFormat)}</span>
 	)
 }
 
 
 
 /**
- * <Select name value handleValueChange className>
+ * <SelectInput name value className handleValueChange>
+ *     <option value>label</option>
+ *     ...
+ * </SelectInput>
  */
-function Select(props) {
-	return (
-		<select name={props.name} value={props.value} onChange={props.handleValueChange} className={props.className}>
-			{props.children}
-		</select>
-	)
+class SelectInput extends React.Component {
+
+	constructor(props) {
+		super(props)
+		this.state = {
+			value: props.value
+		}
+	}
+
+	handleValueChange(evt) {
+		this.setState({ value: evt.target.value })
+		if (props.handleValueChange) {
+			props.handleValueChange(evt, evt.target.value)
+		}
+	}
+
+	render() {
+		let className = 'do--ui-select-input ' + props.className
+		return (
+			<select
+					name={props.name}
+					value={props.value}
+					className={props.className}
+
+					onChange={this.handleValueChange.bind(this)}>
+				{props.children}
+			</select>
+		)
+	}
 }
 
 /**
- * Text content for SELECT
+ * <SelectView value className>{options}</SelectView>
  */
 function SelectView(props) {
+	const className = 'do--ui-select-view ' + props.className
 	let i = 0;
 	while (i < props.children.length) {
 		// not sure what type is a value, it may even lack the toString method - so I convert it to string another way:
 		if ( ("" + props.children[i].props.value) === ("" + props.value) ) {
 			return (
-				<span className={props.className}>
+				<span className={className}>
 					{props.children[i].props.children}
-					<input type="hidden" name={props.name} value={props.value} />
 				</span>
 			)
 		}
@@ -169,73 +238,89 @@ function SelectView(props) {
 
 
 
-// /**
-//  * SELECT
-//  */
-// function SelectField(props) {
-// 	let className = 'do--data-field do--data-field--select';
-// 	if (props.className) className += ' ' + props.className;
-// 	switch (props.mode) {
-// 		case 'create':
-// 		case 'edit':
-// 			return (
-// 				<div className={className}>
-// 					<FieldLabel text={props.label} mode={props.mode} />
-// 					<select name={props.name} value={props.value} onChange={props.handleValueChange} className="do--data-field__control">
-// 						{props.options.map(function (option) {
-// 							return <option key={props.name + option.value} value={option.value}>{option.label}</option>;
-// 						})}
-// 					</select>
-// 				</div>
-// 			)
-// 		default: // view mode
-// 			return (
-// 				<div className={className}>
-// 					<FieldLabel text={props.label} mode={props.mode} />
-// 					{selectView(props)}
-// 					<input type="hidden" name={props.name} value={props.value}/>
-// 				</div>
-// 			)
-// 	}
-// }
-
-
 
 /**
- * TEXTAREA
+ * <CheckListInput name value[] className handleValueChange>
+ *     <option value>label</option>
+ *     ...
+ * </CheckListInput>
  */
-function TextAreaField(props) {
-	let className = 'do--data-field';
-	if (props.className) className += ' ' + props.className;
-	switch (props.mode) {
-		case 'create':
-		case 'edit':
-			return (
-				<div className={className}>
-					<FieldLabel text={props.label} mode={props.mode} />
-					<Textarea
-						minRows={1}
-						name={props.name}
-						value={props.value}
-						onChange={props.handleValueChange}
-						className="do--data-field__control do--data-field__control--wide" />
-				</div>
-			)
-		default: // in view mode
-			return (
-				<div className={className}>
-					<FieldLabel text={props.label} mode={props.mode} />
-					{props.value.split('\n').map( (item, i) =>
-						<p key={props.name + '-line-' + i}>{item}</p>
-					)}
-					<input type="hidden" name={props.name} value={props.value}/>
-				</div>
-			)
+class CheckListInput extends React.Component {
+
+	constructor(props) {
+		super(props)
+		let options = props.children.map( (optionElm) => {
+			let option = { value: optionElm.props.value, label: optionElm.props.children, selected: false }
+			props.value.forEach( function (item) {
+				if ( option.value === item ) {
+					option.selected = true
+				}
+			})
+			return option
+		})
+		this.state = {
+			options
+		}
+
+	}
+
+	handleValueChange(evt) {
+		const component = this
+		let newOptions = []
+		let newValue = []
+		this.state.options.forEach(function (option) {
+			let newOption = Object.assign({}, option)
+			if ( newOption.value === evt.target.value ) {
+				newOption.selected = true
+				newValue.push(evt.target.value)
+			}
+			newOptions.push(newOption.evt.target.value)
+		})
+		this.setState({ options: newOptions })
+		if (props.handleValueChange) {
+			props.handleValueChange(evt, newValue)
+		}
+	}
+
+	render() {
+		let className = 'do--ui-check-list-input ' + props.className
+		return (
+			<div className={className}>
+				{this.state.options.map( (option) => {
+					return (
+						<div>
+							<label>
+								<input type="checkbox" name={this.props.name} value={option.value} checked={option.checked} onChange={this.handleValueChange.bind(this)} />
+								{option.label}
+							</label>
+						</div>
+					)
+				})}
+
+			</div>
+		)
 	}
 }
 
-
-
+/**
+ * <SelectView value className>{options}</SelectView>
+ */
+// function SelectView(props) {
+// 	const className = 'do--ui-select-view ' + props.className
+// 	let i = 0;
+// 	while (i < props.children.length) {
+// 		// not sure what type is a value, it may even lack the toString method - so I convert it to string another way:
+// 		if ( ("" + props.children[i].props.value) === ("" + props.value) ) {
+// 			return (
+// 				<span className={className}>
+// 					{props.children[i].props.children}
+// 				</span>
+// 			)
+// 		}
+// 		i++;
+// 	}
+// 	return ""
+// }
 
 
 // /**
@@ -293,7 +378,7 @@ function TextAreaField(props) {
 
 
 /**
- * Submit button
+ * Submit button - DEPRECATED
  */
 function SubmitButton(props) {
 	let className = ['do--button', props.className].join(' ');
