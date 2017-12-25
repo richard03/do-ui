@@ -1,16 +1,16 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { Link } from 'react-router-dom'
 import Moment from 'moment'
 
 import Config from './Config.jsx'
-import ui from './uiElements.jsx'
-import { getQueryVariable } from './lib.jsx'
+import ui from './ui/Elements.jsx'
+import lib from './lib.jsx'
 
 import Header from './Header.jsx'
-import Field from './Field.jsx'
-import CriteriaList from './CriteriaList.jsx'
-
+import TextControl from './ui/TextControl.jsx'
+import DateControl from './ui/DateControl.jsx'
+import SelectControl from './ui/SelectControl.jsx'
+import CriteriaListControl from './ui/CriteriaListControl.jsx'
 
 
 class Task extends React.Component {
@@ -18,95 +18,110 @@ class Task extends React.Component {
 		super(props)
 
 		this.state = {
-			task: this.props.task
+			formMode: props.mode,
+			newTaskData: null
 		}
 	}
-	componentWillReceiveProps(nextProps) {
-		this.setState({ task: nextProps.task })
-
-	}
-	componentWillMount(nextProps, nextState) {
-		this.props.updateSiteMapPosition() // notify global sitemap that I am here
-		this.props.fetchTask()
-	}
-
-	mode(newMode) {
-		if (typeof newMode == 'string') { // set mode
-			this.props.setMode(newMode)
-		} else { // get current mode
-			return this.props.mode
+	componentWillMount() {
+	 	if (this.props.parameters && this.props.parameters.taskid) {
+	 		const taskId = this.props.parameters.taskid
+			this.props.fetchTask(taskId)
+			this.setState({ formMode: 'view', newTask: null })
+		} else {
+			this.props.createTask()
+			this.setState({ formMode: 'create', newTaskData: {} })
 		}
 	}
 
-	redirectToTaskList() {
-		this.props.history.push(Config.taskListScreenPath)
-	}
-
-	handleFieldChange(evt, name, value) {
-		let task = this.state.task
-		task[name] = value
-		this.setState({ task })
-	}
-	handleFormSubmit(evt) {
-		evt.preventDefault()
-
-		// task mapping
-		let task = {
-			id: this.state.task.id,
-			title: this.state.task.title,
-			acceptanceCriteria: this.state.task.acceptanceCriteria,
-			dueDate: this.state.task.dueDate,
-			status: this.state.task.status,
-			priority: this.state.task.priority
+	handleValueChange(evt, data) {
+		if (this.props.mode == 'read') {
+			let task = Object.assign({}, this.props.task)
+			task[ data.name ] = data.value
+			this.props.updateTask(task)
+			this.props.submitTask(task)
+		} else if (this.props.mode == 'create') {
+			let newTaskData = Object.assign({}, this.state.newTaskData)
+			newTaskData[ data.name ] = data.value
+			let component = this
+			this.setState({ newTaskData }, function () {
+				let task = Object.assign({}, this.props.task, this.state.newTaskData)
+				this.props.updateTask(task)
+			})
 		}
-		this.props.submitTask(task)
+		
+	}
+
+	/**
+	 * Submits all changes to Redux
+	 */
+	handleSubmit() {
 		if (this.props.mode == "create") {
-			this.redirectToTaskList()
+			const newTask = Object.assign({}, this.props.task, this.state.newTaskData)
+			this.props.submitTask(newTask)
+			this.props.redirect('taskList')
 		}
 	}
-	handleResolveTask() {
-		this.props.resolveTask()
-		this.redirectToTaskList()
+
+	/**
+	 * Tells Redux to mark this Task as resolved
+	 */
+	handleResolve() {
+		this.props.resolveTask( this.props.task.id )
+		this.props.redirect('taskList')
 	}
-	handleDeleteTask() {
-		this.props.deleteTask()
-		this.redirectToTaskList()
+
+	/**
+	 * Tells Redux to delete this Task
+	 */
+	handleDelete() {
+		this.props.deleteTask( this.props.task.id )
+		this.props.redirect('taskList')
 	}
 
 	renderFormFields() {
 		return (
 			<div>
-				<input type="hidden" name="id" value={this.state.task.id} />
-				<input type="hidden" name="status" value={this.state.task.status} />
 
-				<Field type='text'
-						mode={this.mode()}
-						label='Název'
-						name='title'
-						value={this.state.task.title}
-						handleValueChange={this.handleFieldChange.bind(this)}
-						className='do--margin-medium--top' />
+				<ui.Field label='Název'	className='do--margin-medium--top'>
+					<TextControl
+							mode={this.state.formMode}	
+							name='title'
+							value={this.props.task.title}
 
-				<Field type='date'
-						mode={this.mode()}
-						label='Termín'
-						name='dueDate'
-						value={this.state.task.dueDate}
-						dateFormat={Config.taskDateFormat}
-						handleValueChange={this.handleFieldChange.bind(this)} />
+							handleValueChange={this.handleValueChange.bind(this)} />
+				</ui.Field>
+				
+				<ui.Field label='Termín'>
+					<DateControl
+							mode={this.state.formMode}
+							name='dueDate'
+							value={this.props.task.dueDate}
+							dateFormat={Config.taskDateFormat}
+							handleValueChange={this.handleValueChange.bind(this)} />
+				</ui.Field>
 
-				<Field type='select'
-						mode={this.mode()}
-						label='Priorita'
-						name='priority'
-						value={this.state.task.priority}
-						handleValueChange={this.handleFieldChange.bind(this)}>
-					<option value="3">{Config.messages.priority.critical}</option>
-					<option value="2">{Config.messages.priority.high}</option>
-					<option value="1">{Config.messages.priority.normal}</option>
-					<option value="0">{Config.messages.priority.low}</option>
-				</Field>
+				<ui.Field label='Priorita'>
+					<SelectControl
+							mode={this.state.formMode}
+							name='priority'
+							value={this.props.task.priority}
 
+							handleValueChange={this.handleValueChange.bind(this)}>
+						<option value="3">{Config.messages.priority.critical}</option>
+						<option value="2">{Config.messages.priority.high}</option>
+						<option value="1">{Config.messages.priority.normal}</option>
+						<option value="0">{Config.messages.priority.low}</option>
+					</SelectControl>
+				</ui.Field>
+				
+				<ui.Field label='Akceptační kriteria'>
+					<CriteriaListControl
+							mode={this.state.formMode}
+							name='acceptanceCriteria'
+							value={this.props.task.acceptanceCriteria}
+
+							handleValueChange={this.handleValueChange.bind(this)} />
+				</ui.Field>
 			</div>
 		);
 	}
@@ -114,19 +129,15 @@ class Task extends React.Component {
 	renderFormButtons() {
 		return (
 			<div className="do--margin-extra--top do--float">
-				<ui.Show if={this.mode() == 'edit'}>
-					<ui.SubmitButton label={Config.messages.saveChanges} className="do--margin-medium--right" />
-					<ui.Button label={Config.messages.back} className="do--margin-medium--right" onClick={this.mode.bind(this, 'view')} />
+				<ui.Show if={ (this.props.mode == 'read') || (this.props.mode == 'submittingUpdate') }>
+					<ui.Button label={Config.messages.resolved} className="do--margin-medium--right" onClick={this.handleResolve.bind(this)} />
+					<ui.Button label={Config.messages.back} className="do--margin-medium--right" onClick={this.props.redirect.bind(this, 'taskList')} />
+					<ui.Button label={Config.messages.delete} className="do--float__right" onClick={this.handleDelete.bind(this)} />
 				</ui.Show>
-				<ui.Show if={this.mode() == 'create'}>
-					<ui.SubmitButton label={Config.messages.createTask} className="do--margin-medium--right" />
-					<Link to={Config.taskListScreenPath} className="do--button do--margin-medium--right">{Config.messages.back}</Link>
+				<ui.Show if={this.props.mode == 'create'}>
+					<ui.Button label={Config.messages.createTask} className="do--margin-medium--right" onClick={this.handleSubmit.bind(this)} />
+					<ui.Button label={Config.messages.back} className="do--margin-medium--right" onClick={this.props.redirect.bind(this, 'taskList')} />
 				</ui.Show>
-				<ui.Hide if={ (this.mode() == 'edit') || (this.mode() == 'create') }>
-					<ui.SubmitButton label={Config.messages.resolved} className="do--margin-medium--right" onClick={this.handleResolveTask.bind(this)} />
-					<Link to={Config.taskListScreenPath} className="do--button do--margin-medium--right">{Config.messages.back}</Link>
-					<ui.Button label={Config.messages.delete} className="do--float__right" onClick={this.handleDeleteTask.bind(this)} />
-				</ui.Hide>
 			</div>
 		);
 	}
@@ -145,14 +156,14 @@ class Task extends React.Component {
 			return
 		}
 
-		if ( (this.props.mode == 'view') || (this.props.mode == 'edit') || (this.props.mode == 'create') ) {
+		if ( (this.props.mode == 'read') || (this.props.mode == 'create') || (this.props.mode == 'submittingUpdate') ) {
 			// show task detail
 			return (
 				<div className="do--box">
 					<Header title={Config.messages.task} />
-					<form onSubmit={this.handleFormSubmit.bind(this)}>
-						{this.renderFormFields()}
-						{this.renderFormButtons()}
+					<form>
+						{ this.renderFormFields() }
+						{ this.renderFormButtons() }
 					</form>
 				</div>
 			)
@@ -170,18 +181,21 @@ class Task extends React.Component {
 
 const mapStateToProps = (state) => {
 	return {
+		parameters: state.navigationReducer.parameters,
 		mode: state.taskReducer.mode,
 		task: state.taskReducer.task
 	}
 }
 const mapDispatchToProps = (dispatch) => {
 	return {
-		updateSiteMapPosition: () => dispatch({ type: 'setSiteMapPosition', newPosition: 'task' }),
+		redirect: (position) => dispatch({ type: 'redirect', position }),
 		setMode: (newMode) => dispatch({ type: 'setTaskFormMode', newMode }),
-		fetchTask: () => dispatch({ type: 'fetchTask' }),
+		fetchTask: (taskId) => dispatch({ type: 'fetchTask', taskId }),
+		createTask: () => dispatch({ type: 'createTask' }),
+		updateTask: (task) => dispatch({ type: 'updateTask', task}),
 		submitTask: (task) => dispatch({ type: 'submitTask', task }),
-		resolveTask: () => dispatch({ type: 'resolveTask' }),
-		deleteTask: () => dispatch({ type: 'deleteTask' })
+		resolveTask: (taskId) => dispatch({ type: 'resolveTask', taskId }),
+		deleteTask: (taskId) => dispatch({ type: 'deleteTask', taskId })
 	}
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Task)

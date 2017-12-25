@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
-import ui from './uiElements.jsx'
+import ui from './ui/Elements.jsx'
 
 
 function Header({ title, login, handleLogout }) {

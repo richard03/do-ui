@@ -1,3 +1,14 @@
+export default {
+	addClassName, 
+	getQueryVariable, 
+	sendGetRequestToRestApi, 
+	sendPostRequestToRestApi, 
+	sendDeleteRequestToRestApi
+}
+
+
+
+
 
 function addClassName(elm, className) {
 	elm.className += ' ' + className;
@@ -92,4 +103,3 @@ function sendDeleteRequestToRestApi(cfg) {
 }
 
 
-export { addClassName, getQueryVariable, sendGetRequestToRestApi, sendPostRequestToRestApi, sendDeleteRequestToRestApi }

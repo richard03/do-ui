@@ -18,9 +18,11 @@ h3,
 button {
 	font-size: 1em;
 }
+/*
 textarea {
 	display: block;
 }
+*/
 p {
 	margin: 0;
 }
@@ -127,77 +129,10 @@ a[href] {
 
 
 
-
-.do--data-field {
-	margin: 3px;
-	padding: 6px;
-	margin-left: -6px;
-	margin-right: -6px;
-	box-shadow: 1px 1px 5px #ccc;
-	position: relative;
-}
-.do--data-field__label {
-	display: block;
-	font-weight: bold;
-	margin: 0 0 0.3em 0;
-	padding: 0;
-}
-input.do--data-field__control,
-textarea.do--data-field__control {
-	padding: 6px;
-}
-select.do--data-field__control {
-	padding: 5px;
-}
-.do--data-field__control--wide {
-	width: 100%;
-	box-sizing: border-box;
-}
-.do--data-field__buttons {
-	margin-top: 6px;
-}
-.do--data-field__edit-button {
-	position: absolute;
-	top: 6px;
-	right: 6px;
-}
-.do--data-field__control-buttons,
-.do--data-field__control-buttons .do--data-field__accept-button,
-.do--data-field__control-buttons .do--data-field__reject-button {
-	margin-left: 6px;
-}
-
-
-
-
 .do--title {
 	margin: 0 0 0.3em 0;
 	padding: 0;
 }
-
-
-
-
-.do--button {
-	display: inline-block;
-	padding: 12px;
-	border: none;
-	border-radius: 2px;
-	box-shadow: 1px 1px 5px #ccc;
-	background: #eee;
-	color: #000;
-	text-decoration: none;
-
-	margin-left: 12px;
-}
-.do--button:first-child {
-	margin-left: 0;
-}
-.do--button--small {
-	padding: 6px 12px;
-}
-
-
 
 
 
@@ -217,9 +152,12 @@ select.do--data-field__control {
 	position: relative;
 	list-style: none;
 	margin: 1px;
-	padding: 12px 12px 12px 0;
+	padding: 12px;
 	border-left: 12px solid #eee;
 	box-shadow: 1px 1px 5px #ccc;
+}
+.do--list__link {
+	cursor: pointer;
 }
 .do--list__item--removed {
 	display: none;
@@ -249,24 +187,85 @@ select.do--data-field__control {
 
 
 
-
-
-.do--criteria-list,
-.do--criteria-list__item {
+.do--ui-data-field {
+	margin: 3px;
+	padding: 6px;
+	margin-left: -6px;
+	margin-right: -6px;
+	box-shadow: 1px 1px 5px #ccc;
 	position: relative;
 }
-.do--criteria-list__delete-button,
-.do--criteria-list__edit-button {
-	position: absolute;
-	top: 0;
-	right: 0;
+.do--ui-data-field__label {
+	display: block;
+	font-weight: bold;
+	margin: 0 0 0.3em 0;
+	padding: 0;
 }
-.do--criteria-list__item {
-	padding-right: 42px;
+/*
+.do--ui-data-field__control--wide {
+	width: 100%;
+	box-sizing: border-box;
 }
-.do--criteria-list__item {
+.do--ui-data-field__buttons {
 	margin-top: 6px;
 }
-.do--criteria-list__view-button {
-	margin-left: 24px;
+.do--ui-data-field__edit-button {
+	position: absolute;
+	top: 6px;
+	right: 6px;
+}
+.do--ui-data-field__control-buttons,
+.do--ui-data-field__control-buttons .do--ui-data-field__accept-button,
+.do--ui-data-field__control-buttons .do--ui-data-field__reject-button {
+	margin-left: 6px;
+}*/
+
+
+
+
+.do--ui-button {
+	display: inline-block;
+	padding: 12px;
+	border: none;
+	border-radius: 2px;
+	box-shadow: 1px 1px 5px #ccc;
+	background: #eee;
+	color: #000;
+	text-decoration: none;
+
+	margin-left: 12px;
+}
+.do--ui-button:first-child {
+	margin-left: 0;
+}
+.do--ui-button--small {
+	padding: 6px 12px;
+}
+
+
+
+
+
+.do--text-list-input__delete-button,
+.do--text-list-input__add-button {
+	position: relative;
+	top: -10px;
+}
+textarea.do--text-input,
+input.do--date-input,
+select.do--text-control__input-control,
+textarea.do--text-list-input__control {
+	padding: 6px;
+}
+.do--criteria-list-control__control-buttons,
+.do--text-control__control-buttons {
+	margin-left: 12px;
+}
+.do--criteria-list-control__control-buttons,
+.do--text-control__edit-button,
+.do--date-control__edit-button,
+.do--criteria-list-control__edit-button {
+	position: absolute;
+	bottom: 6px;
+	right: 6px;
 }

@@ -1,10 +1,9 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
 import { connect } from 'react-redux'
 
 import Config from './Config.jsx'
 import { addClassName } from './lib.jsx'
-import ui from './uiElements.jsx'
+import ui from './ui/Elements.jsx'
 
 import Header from './Header.jsx'
 
@@ -17,8 +16,17 @@ class TaskList extends React.Component {
 	}
 
 	componentWillMount() {
-		this.props.updateSiteMapPosition()
 		this.props.loadTaskList()
+	}
+
+	handleAddTask() {
+		this.props.redirect('task')
+	}
+
+	handleEditTask(evt) {
+		const taskId = evt.target.dataset.taskId
+		this.props.redirect('task', { taskid: taskId })
+//		this.props.history.push(Config.taskDetailScreenPath + '?taskid=' + taskId)
 	}
 
 	resolveTaskHandler(evt) {
@@ -32,7 +40,7 @@ class TaskList extends React.Component {
 		function getTaskListItemClass(taskData) {
 			let buffer = []
 			buffer.push("do--list__item")
-			buffer.push("do--list__item--no-padding")
+			buffer.push("do--list__link")
 			switch("" + taskData.priority) {
 				case "0": buffer.push("do-list__item--low-priority"); break;
 				case "1": buffer.push("do-list__item--normal-priority"); break;
@@ -47,9 +55,8 @@ class TaskList extends React.Component {
 		if (this.props.tasks.length > 0) {
 			taskListItemsHtml = this.props.tasks.map((taskData)=>
 				(taskData.status === 'open')? 
-					<li className={getTaskListItemClass(taskData)} key={taskData.id} data-task-id={taskData.id}>
-						<Link to={Config.taskDetailScreenPath + '?taskid=' + taskData.id} className="do--list__item__link do--margin-wide--left">{taskData.title}</Link>
-						<button className="do--list__button-left" onClick={this.resolveTaskHandler.bind(this)}> </button>
+					<li className={getTaskListItemClass(taskData)} key={taskData.id} data-task-id={taskData.id} onClick={this.handleEditTask.bind(this)}>
+						{taskData.title}
 					</li>
 				: ''
 			)
@@ -71,7 +78,7 @@ class TaskList extends React.Component {
 				<div className="do--box">
 					<Header title={Config.messages.tasks} />
 					<div>
-						<Link to={Config.taskDetailScreenPath} className="do--button do--margin-medium--top">{Config.messages.addTask}</Link>
+						<ui.Button label={Config.messages.addTask} className="do--ui-button do--margin-medium--top" onClick={this.handleAddTask.bind(this)} />
 					</div>
 					{this.getTaskListHtml()}
 				</div>
@@ -89,7 +96,7 @@ const mapStateToProps = (state) => {
 }
 const mapDispatchToProps = (dispatch) => {
 	return {
-		updateSiteMapPosition: () => dispatch({ type: 'setSiteMapPosition', newPosition: 'taskList' }),
+		redirect: (position, parameters) => dispatch({ type: 'redirect', position, parameters }),
 		loadTaskList: () => dispatch({ type: "loadTaskList" }),
 		resolveTask: (taskId) => dispatch({ type: "resolveTask", taskId })
 	}

@@ -7,12 +7,9 @@ export default {
 	apiTaskListPath: '/tasks',
 	apiDateTimeFormat: 'YYYY-MM-DD',
 
-	taskListScreenPath: '/tasks/',
-	taskFormScreenPath: '/taskForm/',
-	taskDetailScreenPath: '/task/',
+	// taskListScreenPath: '/tasks/',
+	// taskDetailScreenPath: '/task/',
 	
-	viewDateFormat: 'D. M. YYYY',
-
 	gApiKey: '752355908856-6ltij7jk35g0jn1l1fesnv6ung3rbtlo.apps.googleusercontent.com',
 
 	messages: {
@@ -43,6 +40,41 @@ export default {
 			high: 'Vysoká',
 			normal: 'Normální',
 			low: 'Nízká'
+		}
+	},
+
+	// components
+
+	TextControl: {
+		messages: {
+			switchToEditMode: 'Uprav',
+			acceptValue: 'OK',
+			rejectValue: 'X'
+		}
+	},
+	DateControl: {
+		viewFormat: 'D. M. YYYY',
+
+		messages: {
+			switchToEditMode: 'Změň'
+		}
+	},
+	SelectControl: {
+		messages: {
+			switchToEditMode: 'Změň',
+		}
+	},
+	CriteriaListControl: {
+		messages: {
+			switchToEditMode: 'Uprav',
+			acceptValue: 'OK',
+			rejectValue: 'X'
+		}
+	}, 
+	TextListInput: {
+		messages: {
+			add: 'Přidej',
+			delete: 'X'
 		}
 	}
 

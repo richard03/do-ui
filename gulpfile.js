@@ -3,6 +3,7 @@
 
 gulp.task('default', function () {
   var src = [
+		'./src/.htaccess',
 		'./src/*.html',
 		'./src/css/*.css'
 	];
@@ -12,6 +13,7 @@ gulp.task('default', function () {
 });
 
 gulp.task('watch', function() {
+    gulp.watch('./src/.htaccess', ['default'])
     gulp.watch('./src/*.html', ['default'])
     gulp.watch('./src/css/*.css', ['default'])
 });
