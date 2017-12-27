@@ -39,7 +39,7 @@ export default class CheckListInput extends React.Component {
 	}
 
 	render() {
-		let className = 'do--ui-check-list-input ' + this.props.className
+		let className = 'do--check-list-input ' + this.props.className
 		return (
 			<div className={className}>
 				{this.state.value.map( (option, index) => {
