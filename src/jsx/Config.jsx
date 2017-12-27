@@ -56,12 +56,14 @@ export default {
 		viewFormat: 'D. M. YYYY',
 
 		messages: {
-			switchToEditMode: 'Změň'
+			switchToEditMode: 'Změň',
+			switchToViewMode: 'X'
 		}
 	},
 	SelectControl: {
 		messages: {
 			switchToEditMode: 'Změň',
+			switchToViewMode: 'X',
 		}
 	},
 	CriteriaListControl: {
