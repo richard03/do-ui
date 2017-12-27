@@ -122,6 +122,22 @@ class Task extends React.Component {
 
 							handleValueChange={this.handleValueChange.bind(this)} />
 				</ui.Field>
+
+				<ui.Field label='Je zadání kompletní?'>
+
+					<SelectControl
+							mode={this.state.formMode}
+							name='status'
+							value={this.props.task.status}
+
+							handleValueChange={this.handleValueChange.bind(this)}>
+						<option value="open">{Config.messages.status.open.option}</option>
+						<option value="incomplete">{Config.messages.status.incomplete.option}</option>
+						<option value="incomprehensible">{Config.messages.status.incomprehensible.option}</option>
+						<option value="oversized">{Config.messages.status.oversized.option}</option>
+					</SelectControl>
+
+				</ui.Field>
 			</div>
 		);
 	}

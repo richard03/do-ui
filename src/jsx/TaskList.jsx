@@ -54,11 +54,10 @@ class TaskList extends React.Component {
 		taskListHtml = <div className="do--info do--margin-medium--top">{Config.messages.emptyTaskList}</div>
 		if (this.props.tasks.length > 0) {
 			taskListItemsHtml = this.props.tasks.map((taskData)=>
-				(taskData.status === 'open')? 
+				(taskData.status == 'done') ? '' : 
 					<li className={getTaskListItemClass(taskData)} key={taskData.id} data-task-id={taskData.id} onClick={this.handleEditTask.bind(this)}>
 						{taskData.title}
 					</li>
-				: ''
 			)
 			taskListHtml = <ul className="do--list do--margin-medium--top">{taskListItemsHtml}</ul>
 		}

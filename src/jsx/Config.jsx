@@ -34,12 +34,34 @@ export default {
 		// titles
 		task: 'Úkol',
 		tasks: 'Úkoly',
+		projects: 'Projekty',
+		project: 'Projekt',
 
 		priority: {
 			critical: 'Kritická',
 			high: 'Vysoká',
 			normal: 'Normální',
 			low: 'Nízká'
+		},
+
+		status: {
+			open: {
+				name: 'připraveno',
+				option: 'ano, zadání je kompletní a lze na něm začít pracovat'
+			},
+			incomplete: {
+				name: 'nekompletní',
+				option: 'ne, zadání něco chybí. Před začátkem práce je nutno zadání doplnit nebo upřesnit'
+			},
+			incomprehensible: {
+				name: 'nesrozumitelné',
+				option: 'ne, zadání je nesrozumitelné nebo vadné. Před začátkem práce je ho nutno opravit'
+
+			},
+			oversized: {
+				name: 'příliš velké',
+				option: 'ne, úkol je příliš velký. Je nutné rozdělit ho na několik úkolů'
+			}
 		}
 	},
 
