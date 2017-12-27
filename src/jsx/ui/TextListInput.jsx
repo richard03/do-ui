@@ -37,7 +37,7 @@ export default class TextListInput extends React.Component {
 	handleItemChange(evt) {
 		const field = evt.target
 		const listItem = evt.target.parentNode
-		const index = parseInt(listItem.dataset.index, 10)
+		const index = parseInt(listItem.parentNode.dataset.index, 10)
 
 		let value = Array.from(this.state.value)
 		value[index].description = evt.target.value
@@ -58,7 +58,7 @@ export default class TextListInput extends React.Component {
 
 	handleItemDelete(evt) {
 		const listItem = evt.target.parentNode
-		const index = parseInt(listItem.dataset.index, 10)
+		const index = parseInt(listItem.parentNode.dataset.index, 10)
 		let newValue = Array.from(this.state.value)
 		newValue.splice(index, 1)
 		this.changeValue(evt, newValue)
