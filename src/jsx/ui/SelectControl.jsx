@@ -33,6 +33,10 @@ export default class SelectControl extends React.Component {
 		this.setState({ mode: 'edit' })
 	}
 
+	handleModeChangeToView() {
+		this.setState({ mode: 'view' })
+	}
+
 	handleValueChange(evt, data) {
 		this.setState({ value: data.value })
 		if (this.state.mode != 'create') {
@@ -41,33 +45,34 @@ export default class SelectControl extends React.Component {
 		this.props.handleValueChange(evt, { name: this.props.name, value: data.value })	
 	}
 
-	rejectValueChange() {
-		this.setState({ value: this.state.acceptedValue, mode: 'view' })
-	}
-
 	render() {
 		return (
-			<div className="do--float do--text-control">
+			<div className="do--float do--control do--control--select">
 				<ui.Show if={this.state.mode == 'view'}>
 					<ui.SelectView value={this.state.value}>
 						{this.props.children}
 					</ui.SelectView>
 					<ui.Button
 						label={Config.SelectControl.messages.switchToEditMode}
-						className="do--text-control__edit-button do--ui-button--small"
+						className="do--control__edit-button do--ui-button--small"
 						onClick={this.handleModeChangeToEdit.bind(this)} />
 				</ui.Show>
 				<ui.Show if={ (this.state.mode == 'edit') || (this.state.mode == 'create') }>
-					<div className="do--text-control__controls do--float__left">
+					<div className="do--control__input do--float__left">
 						<SelectInput
 								name={this.props.name}
 								value={this.state.value}
-								className="do--text-control__input-control" 
+								className="do--control__input-control" 
 
 								handleValueChange={this.handleValueChange.bind(this)}>
 							{this.props.children}
 
 						</SelectInput>
+					</div>
+				</ui.Show>
+				<ui.Show if={ (this.state.mode == 'edit') }>
+					<div className="do--control__buttons do--float__left">
+						<ui.Button label={Config.SelectControl.messages.switchToViewMode} onClick={this.handleModeChangeToView.bind(this)} className='do--control__reject-button do--ui-button--small' />
 					</div>
 				</ui.Show>
 			</div>

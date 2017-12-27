@@ -52,27 +52,26 @@ export default class TextControl extends React.Component {
 
 	render() {
 		return (
-			<div className="do--float do--text-control">
+			<div className="do--float do--control do--control--text">
 				<ui.Show if={this.state.mode == 'view'}>
 					<ui.TextView value={this.state.value} />
 					<ui.Button
 						label={Config.TextControl.messages.switchToEditMode}
-						className="do--text-control__edit-button do--ui-button--small"
+						className="do--control__edit-button do--ui-button--small"
 						onClick={this.handleModeChangeToEdit.bind(this)} />
 				</ui.Show>
 				<ui.Show if={ (this.state.mode == 'edit') || (this.state.mode == 'create') }>
-					<div className="do--text-control__controls do--float__left">
+					<div className="do--control__input do--float__left">
 						<TextInput
 							name={this.props.name}
 							value={this.state.value}
-							className="do--text-control__input-control" 
 
 							handleValueChange={this.handleValueChange.bind(this)} />
 
 					</div>
 				</ui.Show>
 				<ui.Show if={this.state.mode == 'edit'}>
-					<div className="do--text-control__control-buttons do--float__left">
+					<div className="do--control__buttons do--float__left">
 						<ui.Button label={Config.TextControl.messages.acceptValue} onClick={this.acceptValueChange.bind(this)} className='do--text-control__accept-button do--ui-button--small' />
 						<ui.Button label={Config.TextControl.messages.rejectValue} onClick={this.rejectValueChange.bind(this)} className='do--text-control__reject-button do--ui-button--small' />
 					</div>

@@ -28,13 +28,15 @@ export default class TextInput extends React.Component {
 	}
 
 	render() {
-		let className = 'do--text-input ' + this.props.className
+
+		let className = 'do--input do--input--text ' + this.props.className
 		return (
 			<Textarea
 				minRows={1}
 				name={this.props.name}
 				value={this.props.value}
 				className={className}
+				ref={this.size}
 
 				onChange={this.handleValueChange.bind(this)} />
 		)

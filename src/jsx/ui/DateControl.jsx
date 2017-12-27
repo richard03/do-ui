@@ -33,6 +33,10 @@ import DateInput from './DateInput.jsx'
 		this.setState({ mode: 'edit' })
 	}
 
+	handleModeChangeToView() {
+		this.setState({ mode: 'view' })
+	}
+
 	handleValueChange(evt, data) {
 		this.setState({ value: data.value })
 		if (this.state.mode != 'create') {
@@ -50,25 +54,29 @@ import DateInput from './DateInput.jsx'
 
 	render() {
 		return (
-			<div className="do--float do--date-control">
+			<div className="do--float do--control do--control--date">
 				<ui.Show if={this.state.mode == 'view'}>
 					<ui.DateView name={this.props.name} value={this.state.value} dateFormat={Config.DateControl.viewFormat} />
 					<ui.Button
 						label={Config.DateControl.messages.switchToEditMode}
-						className="do--date-control__edit-button do--ui-button--small"
+						className="do--control__edit-button do--ui-button--small"
 						onClick={this.handleModeChangeToEdit.bind(this)} />
 				</ui.Show>
 				<ui.Show if={ (this.state.mode == 'edit') || (this.state.mode == 'create') }>
-					<div className="do--data-field__controls do--float__left">
+					<div className="do--control__input do--float__left">
 						<DateInput
 							name={this.props.name}
 							value={this.state.value}
-							className="do--date-control__input-control" 
+							className="do--control__input-control" 
 							dateFormat={Config.DateControl.viewFormat}
 
 							handleValueChange={this.handleValueChange.bind(this)}
 							handleClickOutside={this.rejectValueChange.bind(this)} />
-
+					</div>
+				</ui.Show>
+				<ui.Show if={ (this.state.mode == 'edit') }>
+					<div className="do--control__buttons do--float__left">
+						<ui.Button label={Config.DateControl.messages.switchToViewMode} onClick={this.handleModeChangeToView.bind(this)} className='do--control__reject-button do--ui-button--small' />
 					</div>
 				</ui.Show>
 			</div>

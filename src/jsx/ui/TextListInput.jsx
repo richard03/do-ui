@@ -66,36 +66,42 @@ export default class TextListInput extends React.Component {
 
 	renderListItem(itemData, index) {
 		return (
-			<div className="do--text-list-input__item" key={index.toString()} data-index={index.toString()}>
-				<Textarea
-					minRows={1}
-					name={this.props.name}
-					value={this.state.value[index].description}
-					className="do--text-list-input__control"
+			<div className="do--input__item do--float" key={index.toString()} data-index={index.toString()}>
+				<div className="do--input__item-input do--float__left">
+					<Textarea
+						minRows={1}
+						name={this.props.name}
+						value={this.state.value[index].description}
 
-					onChange={this.handleItemChange.bind(this)} />
-				<ui.Button label={Config.TextListInput.messages.delete} onClick={this.handleItemDelete.bind(this)} className="do--text-list-input__delete-button do--ui-button--small" />
+						onChange={this.handleItemChange.bind(this)} />
+				</div>
+				<div className="do--input__item-buttons do--float__left">
+					<ui.Button label={Config.TextListInput.messages.delete} onClick={this.handleItemDelete.bind(this)} className="do--input__delete-button do--ui-button--small" />
+				</div>
 			</div>
 		)
 	}
 
 	renderEmptyListItem() {
 		return (
-			<div className="do--text-list-input__item">
-				<Textarea
-					minRows={1}
-					name={this.props.name}
-					value={this.state.newItemDescription}
-					className="do--text-list-input__control"
+			<div className="do--input__item do--float">
+				<div className="do--input__item-input do--float__left">
+					<Textarea
+						minRows={1}
+						name={this.props.name}
+						value={this.state.newItemDescription}
 
-					onChange={this.handleNewItemChange.bind(this)} />
-				<ui.Button label={Config.TextListInput.messages.add} className="do--text-list-input__add-button do--ui-button--small" onClick={this.handleItemAdd.bind(this)} />
+						onChange={this.handleNewItemChange.bind(this)} />
+				</div>
+				<div className="do--input__item-buttons do--float__left">
+					<ui.Button label={Config.TextListInput.messages.add} className="do--input__item__add-button do--ui-button--small" onClick={this.handleItemAdd.bind(this)} />
+				</div>
 			</div>
 		)
 	}
 
 	render() {
-		const className = 'do--text-list-input ' + this.props.className
+		const className = 'do--input do--input--text-list ' + this.props.className
 		const component = this;
 		return (
 			<div className={className}>

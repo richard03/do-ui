@@ -65,33 +65,37 @@ export default class CriteriaListControl extends React.Component {
 
 	render() {
 		return (
-			<div className="do--float do--criteria-list-control">
+			<div className="do--float do--control do--control--criteria-list">
+
 				<ui.Show if={this.state.mode == 'view'}>
+
 					<CheckListInput
 							name={this.props.name} 
 							value={this.state.value} 
 
 							handleValueChange={this.handleValueChange.bind(this)} />
+				
 					<ui.Button
 						label={Config.CriteriaListControl.messages.switchToEditMode}
-						className="do--criteria-list-control__edit-button do--ui-button--small"
+						className="do--control__edit-button do--ui-button--small"
 						onClick={this.handleModeChangeToEdit.bind(this)} />
+
 				</ui.Show>
+
 				<ui.Show if={ (this.state.mode == 'edit') || (this.state.mode == 'create') }>
-					<div className="do--criteria-list-control__controls do--float__left">
+					<div className="do--control__input do--float__left">
 						<TextListInput
 								name={this.props.name}
 								value={this.state.value}
-								className="do--criteria-list-control__input-control" 
 
 								handleValueChange={this.handleValueChange.bind(this)} />
 
 					</div>
 				</ui.Show>
 				<ui.Show if={this.state.mode == 'edit'}>
-					<div className="do--criteria-list-control__control-buttons do--float__left">
-						<ui.Button label={Config.CriteriaListControl.messages.acceptValue} onClick={this.acceptValueChange.bind(this)} className='do--criteria-list-control__accept-button do--ui-button--small' />
-						<ui.Button label={Config.CriteriaListControl.messages.rejectValue} onClick={this.rejectValueChange.bind(this)} className='do--criteria-list-control__reject-button do--ui-button--small' />
+					<div className="do--control__buttons do--float__left">
+						<ui.Button label={Config.CriteriaListControl.messages.acceptValue} onClick={this.acceptValueChange.bind(this)} className='do--control__accept-button do--ui-button--small' />
+						<ui.Button label={Config.CriteriaListControl.messages.rejectValue} onClick={this.rejectValueChange.bind(this)} className='do--control__reject-button do--ui-button--small' />
 					</div>
 				</ui.Show>
 			</div>

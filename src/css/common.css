@@ -1,5 +1,5 @@
 /**
- * RESET
+ * ========== RESET ========== 
  */
 body {
 	font-family: sans-serif;
@@ -18,11 +18,6 @@ h3,
 button {
 	font-size: 1em;
 }
-/*
-textarea {
-	display: block;
-}
-*/
 p {
 	margin: 0;
 }
@@ -43,7 +38,7 @@ a[href] {
 
 
 /**
- * DEBUG
+ * ========== DEBUG ========== 
  */
 #app {
 	min-width: 320px;
@@ -53,7 +48,7 @@ a[href] {
 
 
 /**
- * OVERRIDES
+ * ========== OVERRIDES ========== 
  */
 
 
@@ -117,7 +112,11 @@ a[href] {
 
 
 /**
- * COMPONENTS
+ * ========== COMPONENTS ==========
+ */
+
+/**
+ * Box
  */
 .do--box {
 	margin: 12px;
@@ -128,7 +127,9 @@ a[href] {
 
 
 
-
+/**
+ * Title
+ */
 .do--title {
 	margin: 0 0 0.3em 0;
 	padding: 0;
@@ -137,6 +138,29 @@ a[href] {
 
 
 
+
+/**
+ * Menu
+ */
+.do--menu {
+
+}
+.do--menu__item,
+button.do--menu__item {
+	background: transparent;
+	margin: 6px 0;
+	padding: 0 6px;
+	box-shadow: none;
+	border-right: 2px solid #ccc;
+
+}
+
+
+
+
+/**
+ * List
+ */
 .do--list {
 	margin: 0;
 	padding: 0;
@@ -187,6 +211,10 @@ a[href] {
 
 
 
+
+/**
+ * Data field
+ */
 .do--ui-data-field {
 	margin: 3px;
 	padding: 6px;
@@ -201,28 +229,16 @@ a[href] {
 	margin: 0 0 0.3em 0;
 	padding: 0;
 }
-/*
-.do--ui-data-field__control--wide {
-	width: 100%;
-	box-sizing: border-box;
-}
-.do--ui-data-field__buttons {
-	margin-top: 6px;
-}
-.do--ui-data-field__edit-button {
-	position: absolute;
-	top: 6px;
-	right: 6px;
-}
-.do--ui-data-field__control-buttons,
-.do--ui-data-field__control-buttons .do--ui-data-field__accept-button,
-.do--ui-data-field__control-buttons .do--ui-data-field__reject-button {
-	margin-left: 6px;
-}*/
 
 
 
 
+
+
+
+/**
+ * Button
+ */
 .do--ui-button {
 	display: inline-block;
 	padding: 12px;
@@ -246,26 +262,90 @@ a[href] {
 
 
 
-.do--text-list-input__delete-button,
-.do--text-list-input__add-button {
+
+/**
+ * Input
+ */
+/*.do--input--text-list .do--input__delete-button,
+.do--input--text-list .do--input__add-button {
 	position: relative;
 	top: -10px;
 }
-textarea.do--text-input,
-input.do--date-input,
-select.do--text-control__input-control,
-textarea.do--text-list-input__control {
+*/
+.do--input textarea,
+.do--input input,
+.do--input select {
 	padding: 6px;
+	box-sizing: border-box;
 }
-.do--criteria-list-control__control-buttons,
-.do--text-control__control-buttons {
+
+.do--input__item {
+	margin-top: 6px;
+}
+.do--input__item:first-child {
+	margin-top: 0;
+}
+
+
+.do--input__item-buttons {
 	margin-left: 12px;
 }
-.do--criteria-list-control__control-buttons,
-.do--text-control__edit-button,
-.do--date-control__edit-button,
-.do--criteria-list-control__edit-button {
+.do--input__item-input {
+	width: 70%;
+}
+
+
+
+
+
+
+
+/**
+ * Control
+ */
+.do--control textarea,
+.do--control input,
+.do--control select {
+	padding: 6px;
+	box-sizing: border-box;
+}
+
+.do--control textarea {
+	width: 100%;
+}
+.do--control__buttons {
+	margin-left: 12px;
+}
+
+.do--control__input {
+	width: 70%;
+}
+
+.do--control--date .do--control__input,
+.do--control--select .do--control__input {
+	width: auto;
+}
+
+.do--control__edit-button,
+.do--control--criteria-list .do--control__buttons /*
+.do--control__edit-button*/ {
 	position: absolute;
 	bottom: 6px;
 	right: 6px;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
