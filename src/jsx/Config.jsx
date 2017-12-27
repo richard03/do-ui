@@ -47,20 +47,23 @@ export default {
 		status: {
 			open: {
 				name: 'připraveno',
-				option: 'ano, zadání je kompletní a lze na něm začít pracovat'
+				option: 'ano, zadání je kompletní a lze na něm pracovat'
 			},
 			incomplete: {
 				name: 'nekompletní',
-				option: 'ne, zadání něco chybí. Před začátkem práce je nutno zadání doplnit nebo upřesnit'
+				option: 'ne, zadání něco chybí. Před začátkem práce je nutno zadání doplnit nebo upřesnit',
+				warning: 'Zadání není kompletní. Před začátkem práce je nutno zadání doplnit nebo upřesnit.'
 			},
 			incomprehensible: {
 				name: 'nesrozumitelné',
-				option: 'ne, zadání je nesrozumitelné nebo vadné. Před začátkem práce je ho nutno opravit'
+				option: 'ne, zadání je nesrozumitelné nebo vadné. Před začátkem práce ho je nutno opravit',
+				warning: 'Zadání je nesrozumitelné nebo vadné. Před začátkem práce ho je nutno opravit.'
 
 			},
 			oversized: {
 				name: 'příliš velké',
-				option: 'ne, úkol je příliš velký. Je nutné rozdělit ho na několik úkolů'
+				option: 'ne, úkol je příliš velký. Je nutné rozdělit ho na několik jednodušších úkolů',
+				warning: 'Úkol je příliš velký. Je nutné rozdělit ho na několik jednodušších úkolů.'
 			}
 		}
 	},

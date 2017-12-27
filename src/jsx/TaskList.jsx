@@ -41,6 +41,7 @@ class TaskList extends React.Component {
 			let buffer = []
 			buffer.push("do--list__item")
 			buffer.push("do--list__link")
+			buffer.push("do--float")
 			switch("" + taskData.priority) {
 				case "0": buffer.push("do-list__item--low-priority"); break;
 				case "1": buffer.push("do-list__item--normal-priority"); break;
@@ -57,6 +58,9 @@ class TaskList extends React.Component {
 				(taskData.status == 'done') ? '' : 
 					<li className={getTaskListItemClass(taskData)} key={taskData.id} data-task-id={taskData.id} onClick={this.handleEditTask.bind(this)}>
 						{taskData.title}
+						<ui.Show if={taskData.status != 'open'}>
+							<ui.Icon type="warning" className="do--float__right" title={Config.messages.status[taskData.status].warning} />
+						</ui.Show>
 					</li>
 			)
 			taskListHtml = <ul className="do--list do--margin-medium--top">{taskListItemsHtml}</ul>

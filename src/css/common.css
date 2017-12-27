@@ -152,8 +152,9 @@ button.do--menu__item {
 	padding: 0 6px;
 	box-shadow: none;
 	border-right: 2px solid #ccc;
-
 }
+
+
 
 
 
@@ -172,6 +173,9 @@ button.do--menu__item {
 	top: 6px;
 	bottom: 6px;
 }
+.do--list__link {
+	cursor: pointer;
+}
 .do--list__item {
 	position: relative;
 	list-style: none;
@@ -179,9 +183,6 @@ button.do--menu__item {
 	padding: 12px;
 	border-left: 12px solid #eee;
 	box-shadow: 1px 1px 5px #ccc;
-}
-.do--list__link {
-	cursor: pointer;
 }
 .do--list__item--removed {
 	display: none;
@@ -207,6 +208,19 @@ button.do--menu__item {
 .do-list__item--critical-priority {
 	border-left-color: #f00;
 }
+
+
+
+
+
+
+/**
+ * Icons
+ */
+.do--ui-icon--warning {
+	color: #f66;
+}
+
 
 
 

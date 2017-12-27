@@ -2,6 +2,8 @@ import React from 'react'
 import Moment from 'moment'
 import Textarea from 'react-textarea-autosize'
 
+import IconWarning from 'react-icons/lib/md/warning';
+
 import Config from '../Config.jsx'
 
 
@@ -16,6 +18,8 @@ export default {
 	// TextListView - not implemented yet
 	DateView, // shows date in given format
 	SelectView, // shows selected option as text
+
+	Icon, // SVG icon, could be used inline in text
 
 	Button // simple button wrapped for simple use
 
@@ -130,6 +134,26 @@ function SelectView(props) {
 }
 
 
+
+/**
+ * SVG icon
+ * <Icon type="..." />
+ */
+function Icon(props) {
+	let className = ['do--ui-icon', 'do--ui-icon--' + props.type, props.className].join(' ')
+
+	function renderIcon(type) {
+		switch (type) {
+			case 'warning': return <IconWarning />
+		}
+	}
+
+	return (
+		<span {...props} className={className}>
+			{renderIcon(props.type)}
+		</span>
+	)
+}
 
 
 
