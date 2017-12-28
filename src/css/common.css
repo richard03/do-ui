@@ -111,6 +111,17 @@ a[href] {
 
 
 
+
+
+.do--text--lite {
+	opacity: 0.7;
+}
+.do--text--small {
+	font-size: 70%;
+}
+
+
+
 /**
  * ========== COMPONENTS ==========
  */
@@ -196,16 +207,16 @@ button.do--menu__item {
 	color: #000;
 	text-decoration: none;
 }
-.do-list__item--low-priority {
+.do--list__item--low-priority {
 	border-left-color: #efe;
 }
-.do-list__item--normal-priority {
+.do--list__item--normal-priority {
 	border-left-color: #cef;
 }
-.do-list__item--high-priority {
+.do--list__item--high-priority {
 	border-left-color: #fa3;
 }
-.do-list__item--critical-priority {
+.do--list__item--critical-priority {
 	border-left-color: #f00;
 }
 
