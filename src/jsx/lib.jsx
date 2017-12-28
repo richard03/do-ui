@@ -1,9 +1,13 @@
 export default {
-	addClassName, 
+	addClassName,
+	forEach,
+	convertToArray,
 	getQueryVariable, 
 	sendGetRequestToRestApi, 
 	sendPostRequestToRestApi, 
-	sendDeleteRequestToRestApi
+	sendDeleteRequestToRestApi,
+	convertIdToCode,
+	convertCodeToId
 }
 
 
@@ -13,6 +17,36 @@ export default {
 function addClassName(elm, className) {
 	elm.className += ' ' + className;
 }
+
+
+/**
+ * For each item of "iterable" object - Array, Object etc.
+ * calls the "callback" once
+ */
+function forEach(iterable, callbackFn) {
+	for(var key in iterable) {
+		if (iterable.hasOwnProperty(key)) {
+			callbackFn(iterable[key])
+		}
+	}
+}
+
+
+
+/**
+ * Takes iterable object and converts it into the array (so you can do mapping on it, for instance)
+ */
+function convertToArray(iterable) {
+	let result = []
+	for(var key in iterable) {
+		if (iterable.hasOwnProperty(key)) {
+			result.push(iterable[key])
+		}
+	}
+	return result
+}
+
+
 
 function getQueryVariable(varName) {
 	try {
@@ -101,5 +135,38 @@ function sendDeleteRequestToRestApi(cfg) {
 		}
 	});
 }
+
+
+
+/**
+ * Takes ID number and transforms it to easily readable code
+ */
+function convertIdToCode(id) {
+	const codeArray = id.toString(36).split('')
+	const lastIndex = codeArray.length - 1
+	
+	let buffer = []
+	for (let i = 0; i <= lastIndex; i++ ) {
+		if ( (i % 4 == 0) && (i != 0) ) {
+			buffer.push('-')
+		}
+		buffer.push(codeArray[lastIndex - i])
+	}
+	let code = buffer.reverse().join('')
+	return code
+}
+
+
+
+
+
+/**
+ * Takes code to ID number
+ */
+function convertCodeToId(code) {
+	let codeString = code.replace(new RegExp('-', 'gi'), '')
+	return parseInt(codeString, 36)
+}
+
 
 
