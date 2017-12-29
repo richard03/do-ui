@@ -6,6 +6,7 @@ export default {
 	sendGetRequestToRestApi, 
 	sendPostRequestToRestApi, 
 	sendDeleteRequestToRestApi,
+	createRandomId,
 	convertIdToCode,
 	convertCodeToId
 }
@@ -134,6 +135,12 @@ function sendDeleteRequestToRestApi(cfg) {
 			reject({ message: "Couldn't connect - access_token missing." });
 		}
 	});
+}
+
+
+
+function createRandomId(maxId) {
+	return Math.floor(Math.random() * maxId)
 }
 
 
