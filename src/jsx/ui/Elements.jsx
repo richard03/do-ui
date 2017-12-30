@@ -2,7 +2,8 @@ import React from 'react'
 import Moment from 'moment'
 import Textarea from 'react-textarea-autosize'
 
-import IconWarning from 'react-icons/lib/md/warning';
+import IconWarning from 'react-icons/lib/md/warning'
+import IconChecked from 'react-icons/lib/md/check-box'
 
 import Config from '../Config.jsx'
 
@@ -145,6 +146,7 @@ function Icon(props) {
 	function renderIcon(type) {
 		switch (type) {
 			case 'warning': return <IconWarning />
+			case 'checked': return <IconChecked />
 		}
 	}
 

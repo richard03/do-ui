@@ -16,14 +16,6 @@ class TaskList extends React.Component {
 		super(props)
 	}
 
-	componentWillMount() {
-		this.props.loadTaskList()
-	}
-
-	handleAddTask() {
-		this.props.redirect('task')
-	}
-
 	render() {
 		if (this.props.loading) {
 			return ( // loading...
@@ -37,9 +29,9 @@ class TaskList extends React.Component {
 				<div className="do--box">
 					<Header title={Config.messages.tasks} />
 					<div>
-						<ui.Button label={Config.messages.addTask} className="do--ui-button do--margin-medium--top" onClick={this.handleAddTask.bind(this)} />
+						<ui.Button label={Config.messages.addTask} className="do--ui-button do--margin-medium--top" onClick={this.props.createTask} />
 					</div>
-					<TaskListItems tasks={this.props.tasks} editTaskRedirect={this.props.redirect.bind(this)} />
+					<TaskListItems tasks={this.props.tasks} exclude={ { status: ['done'] } } taskDetailHandler={this.props.fetchTask} />
 				</div>
 			)
 		}
@@ -49,15 +41,14 @@ class TaskList extends React.Component {
 
 const mapStateToProps = (state) => {
 	return {
-		loading: state.taskListReducer.taskListLoading,
-		tasks: state.taskListReducer.tasks
+		loading: state.taskReducer.taskListLoading,
+		tasks: state.taskReducer.tasks
 	}
 }
 const mapDispatchToProps = (dispatch) => {
 	return {
-		redirect: (position, parameters) => dispatch({ type: 'redirect', position, parameters }),
-		loadTaskList: () => dispatch({ type: "loadTaskList" }),
-		resolveTask: (taskId) => dispatch({ type: "resolveTask", taskId })
+		createTask: () => dispatch({ type: "createTask" }),
+		fetchTask: (taskId) => dispatch({ type: "fetchTask", taskId })
 	}
 }
 export default connect(mapStateToProps, mapDispatchToProps)(TaskList)

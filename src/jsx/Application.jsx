@@ -40,12 +40,12 @@ class Application extends React.Component {
 const mapStateToProps = (state) => {
 	return {
 		position: state.navigationReducer.position,
-		parameters: state.navigationReducer.parameters
+		// parameters: state.navigationReducer.parameters
 	}
 }
 const mapDispatchToProps = (dispatch) => {
 	return {
-		redirect: (position) => dispatch({ type: 'redirect', position })
+		// redirect: (position) => dispatch({ type: 'redirect', position })
 	}
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Application)

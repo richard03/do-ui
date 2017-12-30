@@ -30,6 +30,7 @@ export default {
 		saveChanges: 'Uložit změny',
 		switchToViewMode: 'Hotovo',
 		switchToEditMode: 'Upravit',
+		createSubTask: 'Vytvořit podúkol',
 
 		// titles
 		task: 'Úkol',

@@ -1,17 +1,19 @@
 import React from 'react'
 import { connect } from 'react-redux'
 
+import Config from './Config.jsx'
 import ui from './ui/Elements.jsx'
 
 
-function Header({ title, login, handleLogout }) {
+function Header(props) {
 
-	if (login && login.name) {
+	if (props.login && props.login.name) {
 		return (
 			<div className="do--float">
-				<h1 className="do--title do--float__left">{title}</h1>
-				<div className="do--float__right">
-					<div>{login.name}</div>
+				<h1 className="do--title do--float__left">{props.title}</h1>
+
+				<div className="do--float__right do--margin-wide--left">
+					<div>{props.login.name}</div>
 					<div><small><a href="https://accounts.google.com/logout">Odhlásit</a></small></div>
 				</div>
 			</div>
@@ -32,7 +34,7 @@ const mapStateToProps = (state) => {
 };
 const mapDispatchToProps = (dispatch) => {
 	return {
-		// no actions mapped
+		redirect: (position, parameters) => dispatch({ type: 'redirect', position, parameters }),
 	};
 };
 export default connect(mapStateToProps, mapDispatchToProps)(Header)

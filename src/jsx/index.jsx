@@ -18,7 +18,6 @@ import Application from './Application.jsx'
 
 import LoginReducer from './reducers/LoginReducer.jsx'
 import NavigationReducer from './reducers/NavigationReducer.jsx'
-import TaskListReducer from './reducers/TaskListReducer.jsx'
 import TaskReducer from './reducers/TaskReducer.jsx'
 
 const globals = {}
@@ -26,7 +25,6 @@ const globals = {}
 const store = createStore(combineReducers({
 		loginReducer: LoginReducer.create(),
 		navigationReducer: NavigationReducer.create(globals),
-		taskListReducer: TaskListReducer.create(globals),
 		taskReducer: TaskReducer.create(globals),
 		// routing: routerReducer
 	}),
@@ -63,7 +61,9 @@ function onAuthSuccess(auth) {
 				email: googleUserProfile.getEmail()
 			});
 		store.dispatch({ type: 'login', login })
+		store.dispatch({ type: 'fetchTaskList' })
 		store.dispatch({ type: 'redirect', position: 'taskList' })
+
 		render()
 		
 	} else {

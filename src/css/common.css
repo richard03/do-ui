@@ -198,6 +198,9 @@ button.do--menu__item {
 .do--list__item--removed {
 	display: none;
 }
+.do--list__item--supressed {
+	opacity: 0.5;
+}
 .do--list__item--no-padding {
 	padding: 0;
 }
@@ -228,8 +231,14 @@ button.do--menu__item {
 /**
  * Icons
  */
+ .do--ui-icon {
+ 	font-size: 130%;
+ }
 .do--ui-icon--warning {
 	color: #f66;
+}
+.do--ui-icon--checked {
+	color: #060;
 }
 
 
@@ -247,6 +256,7 @@ button.do--menu__item {
 	margin-right: -6px;
 	box-shadow: 1px 1px 5px #ccc;
 	position: relative;
+	min-height: 27px;
 }
 .do--ui-data-field__label {
 	display: block;

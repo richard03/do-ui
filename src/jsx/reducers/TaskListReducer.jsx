@@ -3,7 +3,7 @@ import Config from '../Config.jsx'
 
 const initialState = {
 	taskListLoading: false,
-	tasks: []
+	tasks: {}
 }
 
 
@@ -15,34 +15,44 @@ export default {
 
 	create(context) {
 		return function taskListReducer(state = initialState, action) {
+
+			let tasks = Object.assign({}, state.tasks)
+
 			switch (action.type) {
+
+				case 'redirect':
+					// enforce update upon redirect
+					if (action.position == 'taskList') {
+						// enforce update upon redirect
+						return loadTaskListAction(state, action, context)
+					}
+					return state
+
 
 				case 'loadTaskList':
 					// send request to server to start loading tasks
-					lib.sendGetRequestToRestApi({
-								url: Config.apiBaseUrl + Config.apiTaskListPath,
-								login: context.store.getState().loginReducer.login
-							})
-						.then(
-							// on success
-							function (allTasks) {
-								// do some filtering, output to associative array
-								let tasks = {}
-								allTasks.forEach( function (task) {
-									if (task.status != 'done') {
-										tasks[task.id] = Object.assign({}, task)
-									}
-								})
-								context.store.dispatch({ type: 'populateTaskList', tasks })
-							},
-							// on failure
-							() => context.store.dispatch({ type: 'reportFailure' })
-						)
-					return Object.assign({}, state, { taskListLoading: true });
+					return loadTaskListAction(state, action, context)
+					
+
+				case 'taskSubmitted':
+					tasks[action.task.id] = action.task
+					return Object.assign({}, state, { tasks })
+
+
+				case 'taskDeleted':
+				case 'taskResolved':
+					delete tasks[action.taskId]
+					return Object.assign({}, state, { tasks })
+				
 
 				case 'populateTaskList':
 					// populate task list after server returned the list of tasks
 					return Object.assign({}, state, { tasks: action.tasks, taskListLoading: false })
+
+
+
+				case 'submitTasks':
+					action 
 
 				default:
 					return state

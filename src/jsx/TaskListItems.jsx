@@ -8,29 +8,32 @@ import Config from './Config.jsx'
 
 export default function TaskListItems(props) {
 		
-	let taskList = lib.convertToArray(props.tasks)
+	var taskList = []
+
+	lib.forEach(props.tasks, function (task) {
+		// conditions that exclude task from the list
+		if (task.status == 'deleted') return
+		if (props.exclude && props.exclude.status && props.exclude.status.includes(task.status)) return
+
+		// add task to the list 
+		taskList.push(task)
+	})
+	
 
 	if (taskList.length > 0) {
 		// list not empty
 		return (
 			<ul className="do--list do--margin-medium--top">
-				{taskList.map(function (taskData) {
+				{taskList.map(function (task) {
 			
-					let warning = '';
-					if ( taskData.status && Config.messages.status[taskData.status] && Config.messages.status[taskData.status].warning) {
-						warning = Config.messages.status[taskData.status].warning
-					}
-
 					return (
-						<li className={getTaskListItemClass(taskData)} key={taskData.id} data-task-id={taskData.id} onClick={createEditTaskHandler(props.editTaskRedirect, { taskId: taskData.id })}>
+						<li className={getTaskListItemClass(task)} key={task.id} data-task-id={task.id} onClick={props.taskDetailHandler.bind(null, task.id)}>
 							
-							{taskData.title}
+							{task.title}
 
-							<ui.Show if={warning !== ''}>
-								<ui.Icon type="warning" className="do--float__right" title={warning} />
-							</ui.Show>
+							{renderIcon(task)}
 
-							<div className="do--text--lite do--text--small">{lib.convertIdToCode(parseInt(taskData.id, 10))}</div>
+							<div className="do--text--lite do--text--small">{lib.convertIdToCode(parseInt(task.id, 10))}</div>
 						</li>
 					)
 				})}
@@ -46,24 +49,34 @@ export default function TaskListItems(props) {
 	}
 }
 
-function createEditTaskHandler(redirectFn, params) {
-	return function(evt) {
-		// return fn(evt, params)
-		return redirectFn('task', { taskid: params.taskId })
+
+function getTaskListItemClass(task) {
+	let buffer = []
+	buffer.push("do--list__item do--list__link do--float")
+	if (task.status == 'done') {
+		buffer.push("do--list__item--supressed")
+	} else {
+		switch("" + task.priority) {
+			case "0": buffer.push("do--list__item--low-priority"); break
+			case "1": buffer.push("do--list__item--normal-priority"); break
+			case "2": buffer.push("do--list__item--high-priority"); break
+			case "3": buffer.push("do--list__item--critical-priority"); break
+		}
 	}
+	return buffer.join(" ")
 }
 
 
-function getTaskListItemClass(taskData) {
-	let buffer = []
-	buffer.push("do--list__item")
-	buffer.push("do--list__link")
-	buffer.push("do--float")
-	switch("" + taskData.priority) {
-		case "0": buffer.push("do--list__item--low-priority"); break;
-		case "1": buffer.push("do--list__item--normal-priority"); break;
-		case "2": buffer.push("do--list__item--high-priority"); break;
-		case "3": buffer.push("do--list__item--critical-priority"); break;
+
+function renderIcon(task) {
+	if (task.status == 'done') {
+		return (
+			<ui.Icon type="checked" className="do--float__right" />
+		)
 	}
-	return buffer.join(" ")
+	if ( task.status && Config.messages.status[task.status] && Config.messages.status[task.status].warning) {
+		return (
+			<ui.Icon type="warning" className="do--float__right" title={Config.messages.status[task.status].warning} />
+		)
+	}
 }

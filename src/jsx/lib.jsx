@@ -2,6 +2,7 @@ export default {
 	addClassName,
 	forEach,
 	convertToArray,
+	addUniqueItem,
 	getQueryVariable, 
 	sendGetRequestToRestApi, 
 	sendPostRequestToRestApi, 
@@ -45,6 +46,22 @@ function convertToArray(iterable) {
 		}
 	}
 	return result
+}
+
+
+
+/**
+ * Adds an item to the array,
+ * but only if the item is not in the array yet
+ */
+function addUniqueItem(arr, newItem) {
+	for (let i = 0; i < arr.length; i++) {
+		if ( arr[i] === newItem ) {
+			return arr
+		}
+	}
+	arr.push(newItem)
+	return arr
 }
 
 
