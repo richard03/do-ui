@@ -110,6 +110,26 @@ a[href] {
 
 
 
+.do--counter {
+	display: inline-block;
+	background: #ccc;
+	color: #fff;
+	margin: 0 6px;
+	padding: 3px;
+	font-size: 70%;
+	border-radius: 5px;
+	min-width: 12px;
+	text-align: center;
+}
+.do--counter--green {
+	background: #0c0;
+	color: #fff;
+}
+.do--counter--red {
+	background: #c00;
+	color: #fff;
+}
+
 
 
 

@@ -3,6 +3,7 @@ export default {
 	forEach,
 	convertToArray,
 	addUniqueItem,
+	removeFromArray,
 	getQueryVariable, 
 	sendGetRequestToRestApi, 
 	sendPostRequestToRestApi, 
@@ -63,6 +64,20 @@ function addUniqueItem(arr, newItem) {
 	arr.push(newItem)
 	return arr
 }
+
+
+
+
+/**
+ * Removes a value from the array
+ */
+function removeFromArray(arr, value) {
+	while ( arr.indexOf(value) > 0 ) {
+		arr.splice( arr.indexOf(value) )
+	}
+	return arr
+}
+
 
 
 

@@ -61,10 +61,14 @@ function onAuthSuccess(auth) {
 				email: googleUserProfile.getEmail()
 			});
 		store.dispatch({ type: 'login', login })
-		store.dispatch({ type: 'fetchTaskList' })
+		
+		updateTaskListPeriodically()
+
 		store.dispatch({ type: 'redirect', position: 'taskList' })
 
 		render()
+
+
 		
 	} else {
 		auth.signIn({ ux_mode: 'redirect' });
@@ -74,6 +78,12 @@ function onAuthSuccess(auth) {
 
 function onAuthFailure() {
 	// TODO - Google auth init failed
+}
+
+
+function updateTaskListPeriodically() {
+	store.dispatch({ type: 'fetchTaskList' })
+	setTimeout(updateTaskListPeriodically, 5000)
 }
 
 

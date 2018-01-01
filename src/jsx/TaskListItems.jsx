@@ -32,6 +32,7 @@ export default function TaskListItems(props) {
 							{task.title}
 
 							{renderIcon(task)}
+							{renderNumberOfSubtasks(task)}
 
 							<div className="do--text--lite do--text--small">{lib.convertIdToCode(parseInt(task.id, 10))}</div>
 						</li>
@@ -77,6 +78,15 @@ function renderIcon(task) {
 	if ( task.status && Config.messages.status[task.status] && Config.messages.status[task.status].warning) {
 		return (
 			<ui.Icon type="warning" className="do--float__right" title={Config.messages.status[task.status].warning} />
+		)
+	}
+}
+
+
+function renderNumberOfSubtasks(task) {
+	if (task.subTaskIds && task.subTaskIds.length > 0) {
+		return (
+			<span className="do--counter do--float__right">{task.subTaskIds.length}</span>
 		)
 	}
 }

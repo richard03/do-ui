@@ -44,7 +44,8 @@ export default {
 						})
 						context.store.dispatch({ type: 'updateTaskList', tasks })
 					})
-					return Object.assign({}, state, { taskListLoading: true })				
+					return state
+					// return Object.assign({}, state, { taskListLoading: true })
 
 
 				/**
@@ -180,6 +181,13 @@ export default {
 				 * Mark task as deleted, remove it from the list
 				 */
 				case 'deleteTask':
+
+					if (action.task.parentId) {
+						const parentTask = tasks[action.task.parentId]
+						parentTask.subTaskIds = lib.removeFromArray(parentTask.subTaskIds, action.task.id)
+						submitTask(parentTask, context)
+					}
+
 					deleteTask(action.task.id, context).then( 
 						() => context.store.dispatch({ type: 'taskDeleted', task: action.task }),
 						() => context.store.dispatch({ type: 'reportFailure', failedAction: 'deleteTask' })
