@@ -381,12 +381,21 @@ button.do--menu__item {
 	width: auto;
 }
 
-.do--control__edit-button,
+
 .do--control--criteria-list .do--control__buttons /*
 .do--control__edit-button*/ {
 	position: absolute;
 	bottom: 6px;
 	right: 6px;
+}
+
+.do--control__edit-button {
+	position: absolute;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	width: 80%;
+	opacity: 0;
 }
 
 
